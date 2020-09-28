@@ -437,7 +437,7 @@ Assignment : Calculator Bonus Features
     - this is what the `=` operator does 
   - It's also important to understand that different memory space can in fact hold the **same value**, but they are still **different places in emory**
   - For example, if the last line in the above code was `a = "not here"`, `a` and `b` would still point to `different` addresses in memory, they they just would have the same value
-  
+
 - ```ruby
   a = "hi there"
   b = a
@@ -992,3 +992,476 @@ puts words.inspect        # => ["doo", "channel"]
     ```
 
     
+
+## SMALL EXERCISES
+
+### Easy 1
+
+##### <u>Odd</u>
+
+- Remainder operators return negative results if the number on the left is negative, while modulo always returns a non-negative result if the  number on the right is positive
+
+  - `-5 mod 2 == 1` | `-5 rem 2 == -1`
+
+    
+
+##### <u>digit_list.rb</u>
+
+
+
+**<u>how-many.rb</u>**
+
+- 
+
+
+
+**<u>digit_list.rb</u>**
+
+
+
+
+
+
+
+| Method                                                       | Description                                                  | Example                                                      |
+| :----------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| str.**chars**  ==> an_array                                  | Returns an array of characters in *str*.  This is a shorthand for `str.each_char.to_a` |                                                              |
+| ary.**unshift**(obj, ...) ==> ary                            | Prepends objects to the front of `self`, moving other elements upwards | `a = [ "b", "c", "d" ]` `a.unshift("a")`  `#=> ["a", "b", "c", "d"]` |
+| ary.**map** {\|item\| block} ==> new_ary                     | Invokes the given block once for each element of `self`. Creates a new array containing the values returned by the block. | `a = [ "a", "b", "c", "d" ]` `a.collect {|x| x + "!"}`           `#=> ["a!", "b!", "c!", "d!"]` |
+| something.map(**&:to_i**)                                    | `something.map { |char| char.to_i }` For example, this would convert each element of `something` to integers. |                                                              |
+| ary.**uniq** ==> new_ary ary.**uniq** {\|item\|...} ==> new_ary | Returns a new array by removing duplicate values in `self`. If a block is given, it will use the return value of the block for comparison. | `a = [ "a", "a", "b", "b", "c" ]` `a.uniq   # => ["a", "b", "c"]` |
+| Array#**each**                                               | Calls the given block once for each element in `self`, passing that element as a parameter.  Returns the array itself. | `a = [ "a", "b", "c" ] a.each {|x| print x, " -- " }` Produces: a -- b -- c -- |
+| ary.count ==> int                                            | Returns the number of elements.                              |                                                              |
+| Array#join                                                   | which joins every element in an array using the given argument as the delimiter. | `["hi", "im", "pat"].join(' ') ==> "hi im pat"`              |
+| [Enumerable#reduce](https://rubyapi.org/2.7/o/enumerable#method-i-reduce) | Combines all elements of *enum* by applying a binary operation, specified by a block or a symbol that names a method or operator. | `# Sum some numbers (5..10).reduce(:+)                             #=> 45 # Same using a block and inject (5..10).inject { |sum, n| sum + n }            #=> 45` |
+
+
+
+#### Each vs. map
+
+[`each`](https://ruby-doc.org/core/Enumerator.html#method-i-each) simply iterates over the given enumerable, running the block for each  value. It discards the return value of the block, and each simply  returns the original object it was called on:
+
+```rb
+[1, 2, 3].each do |x|
+  x + 1
+end  # => [1, 2, 3]
+```
+
+This is simply a nicer, more universal way of doing a traditional iterating `for` loop, and `each` is *much* preferred over `for` loops in Ruby
+
+[`map`](https://ruby-doc.org/core/Enumerable.html#method-i-map), however, iterates over each element, using the return value of the  block to populate a new array at each respective index and return that  new array:
+
+```rb
+[1, 2, 3].map do |x|
+  x + 1
+end  # => [2, 3, 4]
+```
+
+**So it “maps” each element to a new one using the block given, hence the name “map”.** Note that neither `each` nor `map` themselves modify the original collection. This is a concise,  functional alternative to creating an array and pushing to it in an  iterative loop.
+
+
+
+## Lesson 2 Quiz
+
+
+
+1. ```ruby
+   MyModule
+   ```
+
+   This is an example of..
+
+   snake_case looks like this -- `my_variable`. It is created using all lower case letters and separating words with the underscore character.
+
+   - [x] **<u>This is an example of CamelCase. `CamelCase` uses no spaces and capitalizes every word. In Ruby it is used for naming classes and modules.</u>**
+
+     
+
+   --------------
+
+   
+
+2. #### (#)This is a comment
+
+   
+
+   --------
+
+   
+
+3. Skip
+
+   
+
+   --------
+
+   
+
+4. #### There is an error in the code which means that it will always output `"Two"`. Identify the line responsible for the error.
+
+   ```ruby
+   a = 2
+   b = rand(2)
+   a *= b
+   
+   if a = 2
+     puts 'Two'
+   else
+     puts 'Not Two'
+   end
+   ```
+
+   - [x] <u>**`<u>if a = 2`**</u>
+
+   **In Ruby, whenever you see a single `=` sign like this it's always variable assignment. Testing for equivalence is done using a double equals sign `==`. Although you can perform variable assignment in a conditional, this is  generally not recommended as it is unclear from your code whether you  are intending to perform assignment or if you intended to test for  equivalence and it is simply a typo.**
+
+   **In this case the intention was to test for equivalence. Since the  assignment being performed in this case is to a an object that will be  evaluated as *truthy*, the `if` branch is always executed.**
+
+   
+
+   ---------
+
+   
+
+5. - [x] Pseudocode is a human-readable, high-level description of a program or  algorithm which helps us formulate a solution at the logical problem  domain level.
+
+   - Pseudo-code allows us to outline a general approach to solving a coding  problem without actually writing any code. It effectively allows us to  load the problem into our brain first in order to be able to dissect it, understand it, and come up with an execution path to solve it. By using pseudocode we can perform this problem solving without having to worry  about the syntax and structure of the solution in code. Once we have  already solved the problem in pseudocode it is then a much simpler step  to translate the solution into code.
+
+   ---------
+
+   
+
+6. Skip
+
+7. Skip
+
+   -----------
+
+   
+
+   
+
+8. #### Given the following piece of pseudocode, which code implementation most closely matches it?
+
+   ```text
+   Given a sentence made up of several words, write a method to do the following.
+   
+   Iterate through the words one by one.
+     - save the first word as the starting value.
+     - starting with the next word iterate through all the remaining words in the sentence
+     - for each iteration, compare the saved value with the current word.
+     - if the word is longer or the same length as the saved value:
+       - reassign the saved value as the current word
+     - move on to the next word
+   
+   After iterating through the sentence, return the saved value.
+   ```
+
+   - [ ] A
+
+   ```ruby
+   def longest_word(sentence)
+     words = sentence.split
+     saved_word = words[0]
+   
+     words.each do |word|
+       if word.length > saved_word.length
+         saved_word = word
+       end
+     end
+   
+     saved_word
+   end
+   ```
+
+   - [ ] B
+
+   ```ruby
+       def longest_word(sentence)
+         words = sentence.split
+         saved_word = words.shift
+   
+         words.each do |word|
+           if saved_word.length < word.length
+             saved_word = word
+           end
+         end
+   
+         saved_word
+       end
+   ```
+
+   - [x] C
+
+```ruby
+    def longest_word(sentence)
+      words = sentence.split
+      saved_word = words.shift
+
+      words.each do |word|
+        if word.length >= saved_word.length
+          saved_word = word
+        end
+      end
+
+      saved_word
+    end
+```
+
+- [ ] D
+
+```ruby
+    def longest_word(sentence)
+      words = sentence.split
+      saved_word = words[0]
+
+      words.each do |word|
+        if word.length >= saved_word.length
+          saved_word = word
+        end
+      end
+
+      saved_word
+    end
+```
+
+**<u>C. These solutions are all fairly similar and some  only have subtle differences, but solution 'C' most closely matches what is specified in the pseudocode.</u>**
+
+**D**. This solution is again very similar to solution C,  but it <u>begins iteration through the sentence at the first word rather  than the next one</u>. As mentioned in the explanation for solution A, this *shouldn't* affect the outcome but is not strictly what was specified.
+
+
+
+----------
+
+
+
+9. #### When something is truthy....
+
+   - [x] It evaluates to `true` when used in a conditional.
+
+   - [x] It is not `nil` or `false`.
+
+   - [x] It returns `true` when preceded with a `!!`.
+
+   - [ ] **It is NOT a boolean object**
+
+     
+
+   
+
+10. ####  There is an error in the code below; identify what it is.
+
+    ```ruby
+    user_input = gets
+    
+    loop do
+      name = user_input
+      break
+    end
+    
+    if user_input
+      puts "Hello " + name
+    end
+    ```
+
+    - [x] <u>**The local variable `name` is initialized within the block, and so is not available in the outer scope.**</u>
+
+    **B**. In Ruby, variable scope is defined by a block, and  variables defined within the inner scope cannot be accessed in outer  scope. In the above code, the `do/ end` following invocation of the `loop` method defines the block and the local variable `name` is initialized within this block. When we then reference the variable  outside of the block in the conditional Ruby does not recognize it since it has not been initialized within this scope.
+
+    
+
+    ----------
+
+    
+
+    
+
+11. #### What specifically do we mean when we refer to a variable's scope?
+
+    - [x] We mean where in a program that variable is available for use.
+
+    **C**. A variable's scope determines where in a program a  variable is available for use, in other words where it can be accessed.  There are a number of things which determine the scope of a variable,  such as the type of variable, where it was initialized and where you are trying to use it (e.g. within a method definition or a block following a method invocation).
+
+    
+
+    --------------
+
+    
+
+    
+
+12. #### Select all of the statements which are true regarding local variable scope in Ruby.
+
+    - [x] <u>**Methods define their own, self-contained, scope.**</u>
+      - Methods define their own scope that is entirely  outside of the execution flow of a program; unlike blocks, local  variables initialized outside of a method are not accessible within it  unless specifically passed in as an argument to the method.
+
+    - [ ] Each branch of an `if/ else` statement defines a separate, inner scope. These branches do not conflict.
+
+    - [ ] Any code delimited by either curly braces `{}` or `do/end` defines a new scope.
+      -  Blocks are delimited by either curly braces `{}` or `do/end`; however, code enclosed in this way does not **always** constitute a block. It is considered a block (and thereby creates a new scope for variables) if the `{}` or `do/end` immediately follows a method invocation. For example, following the `while` keyword with `do/end` <u>does not constitute a block</u>:
+
+      ```ruby
+      while true do
+        a = 5
+        break
+      end
+      
+      > a # => 5
+      ```
+
+    - [x] <u>**Variables initialized in an outer scope can be accessed in an inner scope defined by a block, but not vice versa.**</u>
+      - Blocks define a separate scope from the main program which can be thought of as an *inner scope*. Variables initialized in an outer scope can be accessed in an inner  scope; however, variables initialized in an inner scope cannot be  accessed in an outer scope.
+
+    
+
+    ---------
+
+    
+
+    
+
+13. #### Which statement most accurately describes why the last line of the code below outputs `"hi"`?
+
+    ```ruby
+    def extend_greeting(greeting)
+      greeting + " there"
+    end
+    
+    greeting = "hi"
+    extend_greeting(greeting)
+    
+    puts greeting
+    ```
+
+    <u>**Because the `String#+` method does not mutate the caller.**</u>
+
+    
+
+    
+
+    -----------
+
+    
+
+    
+
+14. Skip
+
+    
+
+    -------------------
+
+    
+
+    
+
+15. #### Which of  the following behaviors does Ruby exhibit when passing an object as an  argument to a method call? Select all that apply.
+
+    - [x] <u>**When an object is passed to a method call as an argument, the parameter assigned to it acts as a pointer to the original object.**</u>
+      - In Ruby, variables are references to objects and do not contain objects  themselves. When an object is passed in as an argument to a method, the  method parameter is essentially acting as variable referencing that  object.
+    - [x] <u>**Re-assigning a variable within a method doesn't affect the object that the variable is pointing to outside of the method.**</u>
+      - In Ruby, re-assigning a variable has no effect on the object the  variable is bound to; it merely binds the variable to a different  object.
+    - [ ] When an object is passed to a method call as an argument, a copy of the object is created and passed into the method.
+      - This is not a behavior that Ruby exhibits. Ruby creates references to  objects when passing them as method arguments, rather than creating  copies of objects. (A copy would contain the same value but point to a different memory address/object)
+    - [x] <u>**It is possible for an operation within the method to mutate the original object outside of the method.**</u>
+      - In Ruby, if an object passed as a method argument is mutable, and the  operation used within the method is one that mutates the caller, then  the original object can be mutated.
+
+    
+
+    
+
+    --------------------
+
+    
+
+    
+
+    
+
+16. ####  What do we mean when we talk about *variables as pointers* in Ruby? Select all answers that apply.
+
+    - [ ] You can't have more than one variable pointing to the same memory address at the same time.
+
+      - You can have multiple variables all pointing to the same space in memory, e.g.
+
+        ```ruby
+        a = "hello world!"
+        b = a
+        ```
+
+        In this example `b` and `a` are both pointing to the space in memory that the `"hello world!"` string object occupies.
+
+    - [x] <u>**Variables in Ruby act as labels we create to refer to physical space in memory.**</u>
+
+      - Variables are essentially labels that act as pointers to some physical memory address in your computer
+
+    - [ ] Using a method that *mutates the caller* points a variable to a different memory address.
+
+      - Using a method that mutates the caller doesn't change the memory address that the variable is pointing to - this remains the same.
+      - **So basically, after mutating the caller, the variable will still point to the same memory address, i.e. the variable will reference the same object before and after the mutation (same object ID). ONLY THE <u>STATE OF THE OBJECT</u> HAS BEEN CHANGED.**
+
+    - [ ] Variables can only act as pointers if we pass them into a method as an argument.
+
+      - Variables can act as pointers anywhere in Ruby code regardless of  whether you are going to pass them to a method; however, variables  initialized outside of a method can then only be accessed within a  method if passed to that method as an argument.
+
+    ----------------------------
+
+    
+
+17. #### Why is the `name` method invoked instead of the local variable `name` on line 8 in the following example?
+
+    ```ruby
+    def name
+      "George"
+    end
+    
+    name = "Lisa"
+    
+    def display_name
+      puts name
+    end
+    
+    display_name
+    ```
+
+    - [ ] A: The `name` method is defined before the local variable `name` is initialized, so the method takes precedence.
+      - When determining whether to invoke a method or reference a local  variable (due to both having the same name), Ruby doesn't take the order of definition or initialization into account.
+
+    - [ ] B: Ruby tries to reference the local variable `name` first, but can't access it from within the method, so the `name` method is invoked instead.
+      - <u>Ruby never tries to reference the local variable `name` because it's not within the method's scope.</u>
+
+    - [x] C: **<u>Local variables that are initialized outside of a method can't be accessed from within the method definition.</u>**
+      - The local variable `name` is initialized outside the `display_name` method definition, which means it's not within the method's scope. <u>Note that even if you pass a variable as an argument to a method, and the  parameter name is the same as the name of the local variable we passed  in as the argument, it will still be a different variable within a  method (just with the same name), but both variables will point to the  same object.</u> **The `name` method can be invoked from within `display_name`, though, because both methods are defined within the same scope**.
+        - This is why the name method can be invoked but the local variable "name" cannot be
+
+    - [ ] D: All of the above.
+
+    --------------
+
+    
+
+18.  Do later
+
+    ------------------
+
+    
+
+19. #### In the following example, why does Ruby reference the local variable `name` on line 8 instead of invoking the `name` method?
+
+    ```ruby
+    name = "Lisa"
+    
+    def name
+      "George"
+    end
+    
+    loop do
+      puts name
+      break
+    end
+    ```
+
+    - [x] **<u>Local variables initialized outside of a block (in the outer scope) can  be accessed from within the block's inner scope. Inside the block, both  the local variable and the method are in scope, but by default Ruby  first references the local variable.</u>**
+
+    - When a local variable is initialized in the outer scope, it can be  referenced from within the block's inner scope, but not vice versa. Even though the local variable and the method have the same name, <u>Ruby gives precedence to the local variable</u>.
+
