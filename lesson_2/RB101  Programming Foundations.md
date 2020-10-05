@@ -1293,8 +1293,9 @@ end  # => [2, 3, 4]
 12. #### Select all of the statements which are true regarding local variable scope in Ruby.
 
     - [x] <u>**Methods define their own, self-contained, scope.**</u>
-      - Methods define their own scope that is entirely  outside of the execution flow of a program; unlike blocks, local  variables initialized outside of a method are not accessible within it  unless specifically passed in as an argument to the method.
-
+      
+    - Methods define their own scope that is entirely  outside of the execution flow of a program; unlike blocks, local  variables initialized outside of a method are not accessible within it  unless specifically passed in as an argument to the method.
+      
     - [ ] Each branch of an `if/ else` statement defines a separate, inner scope. These branches do not conflict.
 
     - [ ] Any code delimited by either curly braces `{}` or `do/end` defines a new scope.
@@ -1310,6 +1311,7 @@ end  # => [2, 3, 4]
       ```
 
     - [x] <u>**Variables initialized in an outer scope can be accessed in an inner scope defined by a block, but not vice versa.**</u>
+      
       - Blocks define a separate scope from the main program which can be thought of as an *inner scope*. Variables initialized in an outer scope can be accessed in an inner  scope; however, variables initialized in an inner scope cannot be  accessed in an outer scope.
 
     
@@ -1464,4 +1466,33 @@ end  # => [2, 3, 4]
     - [x] **<u>Local variables initialized outside of a block (in the outer scope) can  be accessed from within the block's inner scope. Inside the block, both  the local variable and the method are in scope, but by default Ruby  first references the local variable.</u>**
 
     - When a local variable is initialized in the outer scope, it can be  referenced from within the block's inner scope, but not vice versa. Even though the local variable and the method have the same name, <u>Ruby gives precedence to the local variable</u>.
+
+
+
+
+
+# Lesson 3: Practice Problems
+
+## Easy 1
+
+
+
+1. "`numbers.uniq` returned a new `Array` object with unique elements, but it did not modify the `numbers` object"
+
+   ```ruby
+   numbers = [1, 2, 2, 3]
+   numbers.uniq
+   
+   puts numbers  ==> #prints out  1  2  2  3 
+   ```
+
+   
+
+2. `!!<some object>` is used to turn any object into their boolean equivalent. (Try it in irb)
+
+   `!<some object>` is used to turn any object into the opposite of their boolean equivalent, just like the above, but opposite.'
+
+   
+
+3. 
 
