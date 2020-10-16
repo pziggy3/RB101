@@ -1492,7 +1492,173 @@ end  # => [2, 3, 4]
 
    `!<some object>` is used to turn any object into the opposite of their boolean equivalent, just like the above, but opposite.'
 
-   
 
-3. 
 
+
+
+## Lesson 4
+
+##### Collections Basics
+
+- `#fetch` throws an `IndexError` exception if the index is **out of bounds**. This is very helpful for catching indices that are out of bounds, but which method is better to use? `#[]` or `#fetch`? `#[]` occurs most often in Ruby code, but it's actually better to use `#fetch` since it enforces the array boundaries. The key point here is to be careful when `#[]` returns `nil`. 
+
+  - ```ruby
+    arr.fetch(2) # => nil
+    arr.fetch(3) # => IndexError: index 3 outside of array bounds: -3...3
+                 #        from (irb):3:in `fetch'
+                 #        from (irb):3
+                 #        from /usr/bin/irb:11:in `<main>'
+    ```
+
+    
+
+- `Hash` also has a `#fetch` method which can be useful when trying to disambiguate valid hash keys with a `nil` value from invalid hash keys.
+
+  - ```ruby
+    hsh = { :a => 1, 'b' => 'two', :c => nil }
+    
+    hsh['b']       # => "two"
+    hsh[:c]        # => nil
+    hsh['c']       # => nil
+    hsh[:d]        # => nil
+    
+    hsh.fetch(:c)  # => nil
+    hsh.fetch('c') # => KeyError: key not found: "c"
+                   #        from (irb):2:in `fetch'
+                   #        from (irb):2
+                   #        from /usr/bin/irb:11:in `<main>'
+    hsh.fetch(:d)  # => KeyError: key not found: :d
+                   #        from (irb):3:in `fetch'
+                   #        from (irb):3
+                   #        from /usr/bin/irb:11:in `<main>'
+    ```
+
+    
+
+- Hash has a `#to_a` method, which returns an array.
+
+  - ```ruby
+    hsh = { sky: "blue", grass: "green" }
+    hsh.to_a # => [[:sky, "blue"], [:grass, "green"]]
+    ```
+
+
+
+- Just like `Hash` has a `#to_a` method, `Array` has a `#to_h` method
+
+  - ```ruby
+    arr = [[:name, 'Joe'], [:age, 10], [:favorite_color, 'blue']]
+    arr.to_h # => { :name => "Joe", :age => 10, :favorite_color => "blue" }
+    ```
+
+    
+
+- How to Loop over a **Hash**:
+
+  - ```ruby
+    number_of_pets = {
+      'dogs' => 2,
+      'cats' => 4,
+      'fish' => 1
+    }
+    pets = number_of_pets.keys # => ['dogs', 'cats', 'fish']
+    counter = 0
+    
+    loop do
+      break if counter == number_of_pets.size
+      current_pet = pets[counter]
+      current_pet_number = number_of_pets[current_pet]
+      puts "I have #{current_pet_number} #{current_pet}!"
+      counter += 1
+    end
+    
+    # Result:
+    I have 2 dogs!
+    I have 4 cats!
+    I have 1 fish!
+    ```
+
+
+
+#### Introduction to PEDAC Process
+
+1. P - Understand the Problem
+
+   - Ask: **Do I need to return the same string object or an entirely new string?**
+
+2. Data Structure / Algorithm
+
+   - ```ruby
+     # PROBLEM:
+     
+     # Given a string, write a method `palindrome_substrings` which returns
+     # all the substrings from a given string which are palindromes. Consider
+     # palindrome words case sensitive.
+     
+     # Test cases:
+     
+     # palindrome_substrings("supercalifragilisticexpialidocious") == ["ili"]
+     # palindrome_substrings("abcddcbA") == ["bcddcb", "cddc", "dd"]
+     # palindrome_substrings("palindrome") == []
+     # palindrome_substrings("") == []
+     ```
+
+     - Write input, output, and rules (explicit requirements, implicit requirements)
+
+     - ```ruby
+       # input: string
+       # output: string (not the same object) (verify with interviewer)
+       # rules:
+       	Explicit Requirements
+       	- return all substrings that are a palindrome
+       	- palindromes are CASE-SENSITIVE (returned substrings should maintain the         case that was in the input)
+       	
+       	Implicit Requirements
+       	- the substrings are returned in an ARRAY
+       	- empty strings should be return as an EMPTY ARRAY
+       
+       # Algorithm
+       	- Outer loop: loop through each element of the array
+               - Inner loop: loop through each substring starting with the outer l               loop's element
+       	- # Algorithm:
+       		#  - initialize a result variable to an empty array
+       		#  - create an array named substring_arr that contains all of the
+       		#    substrings of the input string that are at least 2 characters 				long.
+       		#  - loop through the words in the substring_arr array.
+       		#  - if the word is a palindrome, append it to the result
+       		#    array
+       		#  - return the result array
+       ```
+
+
+
+
+
+#### METHODS
+
+- To perform selection, `select` evaluates the **return value of the block**
+
+- When evaluating the block's *return value*, `select` only cares about its *truthiness*. Everything in Ruby is considered "truthy" except for `nil` and `false`.
+
+- For each iteration, `each` sends the value of the current element to the block in the form of an argument. In this block
+
+- Once `each` is done iterating, it *returns the original collection*
+
+- Similar to `select`, `map` also considers the return value of the block. The main difference between these two methods is that `map` uses the return value of the block to perform transformation instead of selection.****
+
+  - The key to remember here is that *`map` always performs transformation based on the return value of the block*.
+
+  - ```ruby
+    [1, 2, 3].map do |num|
+      num.odd?
+      puts num
+    end   ===> Returns [nil, nil, nil]
+    ```
+
+- | Method   | Action         | Considers the return value of the block? | Returns a new collection from the method? | Length of the returned collection |
+  | -------- | -------------- | ---------------------------------------- | ----------------------------------------- | --------------------------------- |
+  | `each`   | Iteration      | No                                       | No, it returns the original               | Length of original                |
+  | `select` | Selection      | Yes, its truthiness                      | Yes                                       | Length of original or less        |
+  | `map`    | Transformation | Yes                                      | Yes                                       | Length of original                |
+
+- 
