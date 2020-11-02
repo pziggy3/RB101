@@ -59,7 +59,7 @@ flintstones.each_with_index do |name, index|
     puts index
   end
 end
-# DOESNT WORK - RETURNS ORIGINAL ARRAY
+# DOESNT WORK - RETURNS ORIGINAL ARRAY because it's an each method
 
 # L.S solution - BETTER
 flintstones.index { |name| name[0, 2] == "Be" }
@@ -86,6 +86,11 @@ letters.each do |letter|
   result[letter] = letter_frequency if letter_frequency > 0
 end
 result
+# scan puts all occurences of the argument into an array (e.g. 'bbbb'.scan == ["b", "b", "b", "b"])
+# ".count" counts the elements in the array
+# In this case, a separate array is create for every 'letter' in 'letters' 
+
+
 
 # 8. What happens when we modify an array while we are iterating over it? What would be output by this code?
 numbers = [1, 2, 3, 4]
