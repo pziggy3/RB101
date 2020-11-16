@@ -1,38 +1,3 @@
-
-
-    Launch logo dark background
-    Menu
-
-    Courses
-    Forum (10+)
-    Events (5)
-    Sharing (10+)
-    Videos
-    Resources
-    Exercises
-    Pages
-        Back
-        Our Pedagogy
-        Mastery-based Learning
-        Results & Outcomes
-        For Employers
-        Is This For Me
-        Common Questions
-        The Student Experience
-        Love
-        Core Curriculum
-        Capstone
-    Chat Room
-    My Account
-    My Assessments
-    Sign Out
-
-    CoursesRB101 Programming FoundationsLesson 6: Slightly Larger ProgramsUpdated Rubocop configuration
-
-Updated Rubocop configuration
-
-Starting with this lesson, we're going to change our coding style a bit. That is, we won't preface methods with Kernel. or append the optional parentheses during method invocation. Starting with this lesson, use the following Rubocop configuration file. Copy and paste the below into a .rubocop.yml file in your lesson_6 directory. Don't forget to make sure you are using Rubocop version 0.86.0 if you can. For a refresher on how to check or change your current Rubocop version, revisit this previous Rubocop assignment.
-
 # .rubocop.yml for RB101 Lessons 6 (05 Oct 2020)
 
 AllCops:

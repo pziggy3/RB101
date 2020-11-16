@@ -2263,7 +2263,27 @@ end
      5.times {|i| print i, " " }   #=> 0 1 2 3 4
      ```
 
+   - Another example - adding two cards from deck to player_cards and dealer_cards.
+
+     ```ruby
+     deck = [['A', '2'], ['B', '3'], ... ]]
+     player_cards = []
+     dealer_cards = []
      
+     2.times do
+         player_cards << deck.pop
+         dealer_cards << deck.pop
+     end
+     ```
+
+
+
+
+
+
+## Assignment: Twenty-One Extra Features
+
+- @variables are called instance variables in ruby. Which means you can access these variables in ANY METHOD inside the class
 
 
 
