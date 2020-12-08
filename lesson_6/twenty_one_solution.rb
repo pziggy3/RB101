@@ -151,7 +151,7 @@ loop do
     break if player_turn == 's'  || busted?(player_cards)
   end
 
-  # Winner is displayed if player's hand busts, (dealer automatically wins), and player is asked to play again.
+  # Winner is displayed if playermethod_name's hand busts, (dealer automatically wins), and player is asked to play again.
   if busted?(player_cards)
     display_result(dealer_cards, player_cards)
     # If player decides to play again, main game loop starts again (next), else break out of main game loop.
