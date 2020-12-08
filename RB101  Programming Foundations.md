@@ -805,7 +805,7 @@ person.age = 23
 
 ### It's References all the way Down
 
-- Ruby's **variables** don't contain object, they contain **references to objects**
+- Ruby's **variables** don't contain objects, they contain **references to objects**
 - Even if we pass a literal to a method Ruby will...
   1.  convert that literal to an object
   2. (internally) create a **reference to the object**
