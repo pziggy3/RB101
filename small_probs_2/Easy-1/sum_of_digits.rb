@@ -13,7 +13,7 @@ def sum2(integer)
   sum = 0
   str_digits = number.to_s.chars
 
-  str.digits.each do |str_digit|
+  str_digits.each do |str_digit|
     sum += str_digit.to_i
   end
 

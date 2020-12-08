@@ -2254,6 +2254,31 @@ end
      (-11).divmod(3.5)   #=> [-4, 3.0]
      11.5.divmod(3.5)    #=> [3, 1.0]
      ```
+     
+     ```ruby
+     DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+     
+     def integer_to_string(number)
+         result = ''
+         loop do
+             number, remainder = number.divmod(10)
+             # e.g. 432, 1 = 4321.divmod(10)
+             result.prepend(DIGITS[remainder])
+             # ''.prepend(DIGITS[1]) => ''.prepend('1')=> '1'
+             breaks if number == 0
+             # 0, 1 = 1.divmod(10)
+         end
+         result
+     end
+     
+     integer_to_string(4321) == '4321'
+     integer_to_string(0) == '0'
+     integer_to_string(5000) == '5000'
+     
+     # NOTE: String#prepend is a MUTATING METHOD, this is bc there is no non-mutating form of prepend
+     ```
+     
+     
 
 4. `times`
 
@@ -2275,6 +2300,63 @@ end
          dealer_cards << deck.pop
      end
      ```
+
+5. `<=>` 
+
+   - **Spaceship operator**
+
+   - It compares the left side against the right side, then returns +1 if the left side is greater than the right, -1 if the left side is smaller  than the right, and 0 if the values are the same. 
+
+   - This is often useful when you need to know whether a number is positive, negative, or zero.
+
+     ```ruby
+     def signed_integer_to_string(number)
+       case number <=> 0
+       when -1 then "-#{integer_to_string(-number)}"
+       when +1 then "+#{integer_to_string(number)}"
+       else         integer_to_string(number)
+       end
+     end
+           
+     signed_integer_to_string(4321) == '+4321'
+     signed_integer_to_string(-123) == '-123'
+     signed_integer_to_string(0) == '0'
+     ```
+
+6. `reduce`
+
+   ```ruby
+   numbers = [1, 2, 3, 4]
+   
+   sum = numbers.reduce { |sum, number| sum + number }
+   # OR
+   sum = numbers.reduce(:+)
+   ```
+
+7. `&:`
+
+   - Shorthand that can allow you to use `map` (iterate and change the return value) without using a block
+
+     ```ruby
+     def sum(integer)
+         integer.to_s.chars.map(&:to_i).reduce(:+)
+     end
+     
+     # Same as...
+     
+     def sum2(integer)
+         sum = 0
+         str_digits = number.to_s.chars
+         
+         str_digits.each do |str_digit|
+             sum += str_digit.to_i
+         end
+         
+         sum
+     end
+     ```
+
+     
 
 
 
