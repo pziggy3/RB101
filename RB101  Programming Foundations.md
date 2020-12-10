@@ -2356,7 +2356,34 @@ end
      end
      ```
 
-     
+8. **STRIPPING NON-ALPHABETIC CHARACTERS FROM STRING**
+
+   - Using `gsub`
+
+   ```ruby
+   string = 'wer,,^WER'
+   string.gsub!(/[^a-z]/i, '')
+   # => "werWER"
+   
+   # Meaning: Matches the case-insensitive letters that are NOT a-z, replaces them with '' (nothing)
+   # Note: ^ --> not 
+   # Note: /i --> case insensitive
+   ```
+
+   - Using `delete`
+
+   ```ruby
+   word =' rhwer,,,2e'
+   word.delete!('^A-Za-z')
+   
+   => "rhwere"
+   ```
+
+   
+
+9. ssss
+
+
 
 
 
