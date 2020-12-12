@@ -1496,13 +1496,49 @@ end  # => [2, 3, 4]
 
 
 
-## Lesson 4
+# Lesson 4
 
-##### Collections Basics
 
-- `#fetch` throws an `IndexError` exception if the index is **out of bounds**. This is very helpful for catching indices that are out of bounds, but which method is better to use? `#[]` or `#fetch`? `#[]` occurs most often in Ruby code, but it's actually better to use `#fetch` since it enforces the array boundaries. The key point here is to be careful when `#[]` returns `nil`. 
+
+## Collections Basics
+
+#### <u>Out of Bounds Indices</u>
+
+- We know that strings and arrays are indexed collections and that we  can reference individual elements within the collection via their index.
+
+- ```ruby
+  str = 'abcde'
+  arr = ['a', 'b', 'c', 'd', 'e']
+  
+  str[2] # => "c"
+  arr[2] # => "c"
+  ```
+
+- What if we try to reference using an index greater than `4`?
 
   - ```ruby
+    str[5] # => nil
+    arr[5] # => nil
+    ```
+
+    - Referencing an out-of-bounds index in this way returns `nil`. 
+    - This is not necessarily a problem for a string, since we know that `nil` is an invalid return value; with an array, <u>`nil` could be a valid return value</u> since arrays can contain any other type of object, including `nil`.
+    - **<u>How can we tell the difference between the valid return and the out-of-bounds reference?</u>**
+
+
+#### <u>Fetch</u>
+
+- <u>Array has a method called `#fetch`</u> which, according to the [Ruby docs](https://ruby-doc.org/core/Array.html#method-i-fetch):
+
+  > Tries to return the element at position index, but throws an  IndexError exception if the referenced index lies outside of the array  bounds.
+
+- `#fetch` throws an `IndexError` exception if the index is **out of bounds**. This is very helpful for catching indices that are out of bounds, but which method is better to use? `#[]` or `#fetch`? 
+
+- `#[]` occurs most often in Ruby code, but it's **<u>actually better to use `#fetch` since it enforces the array boundaries.</u>** 
+
+  - The key point here is to be careful when `#[]` returns `nil`. 
+
+    ```ruby
     arr.fetch(2) # => nil
     arr.fetch(3) # => IndexError: index 3 outside of array bounds: -3...3
                  #        from (irb):3:in `fetch'
@@ -1510,9 +1546,40 @@ end  # => [2, 3, 4]
                  #        from /usr/bin/irb:11:in `<main>'
     ```
 
+
+
+
+#### **<u>Negative indices</u>**
+
+- What if we use an index less than `0`?
+
+  ```ruby
+  str = 'ghijk'
+  arr = ['g', 'h', 'i', 'j', 'k']
+  
+  str[-6]
+  arr[-6]
+  
+  # => nil
+  # => nil
+  ```
+
+  - These negative indices are also out of bounds.
+
+  - We can confirm this by invoking `#fetch`.
+
+    ```ruby
+    arr.fetch(-6) # => IndexError: index -6 outside of array bounds: -5...5
+                  #        from (irb):2:in `fetch'
+                  #        from (irb):2
+                  #        from /usr/bin/irb:11:in `<main>'
+    ```
+
     
 
-- `Hash` also has a `#fetch` method which can be useful when trying to disambiguate valid hash keys with a `nil` value from invalid hash keys.
+#### <u>Invalid Hash Keys</u>
+
+- <u>`Hash` also has a `#fetch` method</u> which can be useful when trying to disambiguate valid hash keys with a `nil` value from invalid hash keys.
 
   - ```ruby
     hsh = { :a => 1, 'b' => 'two', :c => nil }
@@ -1533,7 +1600,9 @@ end  # => [2, 3, 4]
                    #        from /usr/bin/irb:11:in `<main>'
     ```
 
-    
+  - In the above example both the string `'c'` and the symbol `:d` are invalid keys; the string `'b'` and the symbol `:c` are valid keys
+
+#### **<u>Conversion</u>**
 
 - Hash has a `#to_a` method, which returns an array.
 
@@ -1541,8 +1610,8 @@ end  # => [2, 3, 4]
     hsh = { sky: "blue", grass: "green" }
     hsh.to_a # => [[:sky, "blue"], [:grass, "green"]]
     ```
-
-
+    
+  - Each sub-array is equivalent to a key-value pair from the initial hash.
 
 - Just like `Hash` has a `#to_a` method, `Array` has a `#to_h` method
 
@@ -1551,9 +1620,80 @@ end  # => [2, 3, 4]
     arr.to_h # => { :name => "Joe", :age => 10, :favorite_color => "blue" }
     ```
 
-    
 
-- How to Loop over a **Hash**:
+#### <u>Element Assignment</u>
+
+- String Element Assignment
+
+  ```ruby
+  str = "joe's favorite color is blue"
+  str[0] = 'J'
+  str # => "Joe's favorite color is blue"
+  ```
+
+- Array Element Assignment
+
+  ```ruby
+  arr = [1, 2, 3, 4, 5]
+  arr[0] += 1 # => 2
+  arr         # => [2, 2, 3, 4, 5]
+  ```
+
+  - The statement `arr[0] += 1` in this example is shorthand for `arr[0] = arr[0] + 1`.
+  - This combines **array element reference** and **array element assignment** and is another example of Ruby's *syntactical sugar*.
+
+- Hash Element Assignment
+
+  ```ruby
+  hsh = { apple: 'Produce', carrot: 'Produce', pear: 'Produce', broccoli: 'Produce' }
+  hsh[:apple] = 'Fruit'
+  hsh # => { :apple => "Fruit", :carrot => "Produce", :pear => "Produce", :broccoli => "Produce" }
+  ```
+
+  - The hash key is used instead of assigning a value using an index
+
+
+
+## Looping
+
+- In Ruby, a simple loop is created by calling the `Kernel#loop` method and <u>passing a block to it.</u>
+
+  - Any code within the block will be executed each time the loop performs an iteration
+
+  - Because the `loop` method is in the `Kernel` module, it's available everywhere, just like `puts` and `gets`.
+
+    ```ruby
+    loop do
+      puts 'Hello!'
+      break
+    end
+    ```
+
+  
+
+  #### <u>**Next**</u>
+
+  Besides `break`, Ruby also provides the `next` keyword to help us control loops. When `next` is executed, it tells the loop to skip the rest of the current iteration and begin the next one.
+
+  ```ruby
+  counter = 0
+  
+  loop do
+    counter += 1
+    next if counter.odd?
+    puts counter
+    break if counter > 5
+  end
+  
+  2
+  4
+  6
+  => nil
+  ```
+
+  
+
+  #### **<u>How to iterate over a Hash:</u>**
 
   - ```ruby
     number_of_pets = {
@@ -1577,6 +1717,9 @@ end  # => [2, 3, 4]
     I have 4 cats!
     I have 1 fish!
     ```
+
+- Summary: Looping comprises four basic elements: a <u>loop</u>, a <u>counter</u>, a <u>way to retrieve the current value</u>, and a <u>way to exit the loop</u>
+
 
 
 
@@ -1632,9 +1775,163 @@ end  # => [2, 3, 4]
 
 
 
+## Selection and Transformation
+
+- <u>Selection</u> is picking certain elements out of the collection depending on some criterion 
+- <u>Transformation</u> refers to manipulating every element in the collection
+- Selection and transformation both utilize the basics of looping: a loop, a counter, a way to retrieve the current value, and a way to exit the  loop. I
+  - In addition, selection and  transformation require *some criteria*; 
+  - selection uses this  criteria to determine which elements are selected
+  - transformation  uses this criteria to determine how to perform the transformation.
+
+##### Looping to Select and Transform 
+
+- Selecting all `g` characters out of a string
+
+  ```ruby
+  alphabet = 'abcdefghijklmnopqrstuvwxyz'
+  selected_chars = ''
+  counter = 0
+  
+  loop do
+      current_char = alphabet[counter]
+      
+      if current_char == 'g'
+          selected_chars << current_char # appends current_char into 
+      end
+      
+      counter += 1
+      break if counter == alphabet.size 
+  end
+  
+  selected_chars # => "g"
+  ```
+
+  - The `if` condition is what determines which values are selected and which ones are ignored; this is the *selection criteria*. 
+
+  ```ruby
+  # Transformation
+  fruits = ['apple', 'banana', 'pear']
+  transformed_elements = []
+  counter = 0
+  
+  loop do
+      current_element = fruits[counter]
+      
+      transformed_elements << current_element + 's'	# appends transformation
+      
+      counter += 1
+      break if counter == fruits.size
+  end
+  
+  transformed_elements # => ["apple", "bananas", "pears"]
+  ```
+
+  - Since we're applying the transformation to every element in the array, we don't need an `if` condition, but the entire line is the *transformation criteria*.
+  - **When performing transformation, it's always important to pay  attention to whether the original collection was mutated or if a new  collection was returned.**
+
+- <u>Selection with Hashes</u> - Now we want select the key-value pairs where the value is `Fruit` 
+
+  ```ruby
+  produce = {
+  	'apple' => 'Fruit',
+      'carrot' => 'Vegetable',
+      'pear' => 'Fruit',
+      'broccoli' => 'Vegetable'
+  }
+  
+  def select_fruit(produce_list)
+      items = produce.keys
+      fruit_hash = {}
+      counter = 0
+  
+      loop do
+        break if counter == items.size
+        current_item = items[counter]
+  
+        if produce[current_item] == 'Fruit'
+          fruit_hash[current_item] = 'Fruit'
+        end
+  
+        counter += 1
+      end
+      
+      fruit_hash
+  end
+  
+  select_fruit(produce) # => {"apple"=>"Fruit", "pear"=>"Fruit"}
+  ```
+
+  - Notice that the original argument `produce_list` is not mutated
+  - a new hash is returned by the method (as opposed to an array or string)
+
+- <u>Implementing a method called `double_numbers!` that **mutates its argument**</u>
+
+  ```ruby
+  def double_numbers!(number_array)
+      counter = 0
+      loop do
+          break if counter == number_array.size
+          
+          current_element = number_array[counter]
+          number_array[counter] = current_element * 2 
+          
+          counter += 1
+      end
+      
+      number_array
+  end
+  ```
+
+  - You can check if the method mutated its argument by checking the .object_id of the original array and the result of the method (the mutated array)
+  - **<u>Rather than returning a new array, this method returns a reference to the (mutated) original array</u>**
+
+- <u>Try coding a solution that doubles the numbers that have odd indices</u>
+
+  ```ruby
+  def double_odd_indices(numbers_array)
+      doubled_array = []
+      counter = 0
+      
+      loop do
+          break if counter == numbers_array.size
+          
+          current_element = numbers_array[counter]
+          current_element *= 2 if counter.odd?
+          doubled_array << current_element
+          
+          counter += 1
+      end
+      
+      doubled_array
+  end
+  ```
+
+#### <u>More Flexible Methods</u>
+
+- Let's update our `double_numbers` method to not only be able  to double the values in an array, but to multiply by any number. For  example, let's create a method called `multiply` that can take an additional argument to determine the *transformation criteria*.
+
+  ```ruby
+  def multiply(number_array, multiplier)
+      multiplied_numbers = []
+      counter = 0
+      
+      loop do
+          break if number_array.size == counter
+          
+          multiplied_numbers << number_array[counter] *= multiplier        
+          counter += 1 
+      end
+      
+      multiplied_numbers
+  end
+  ```
+
+- Common mistake - Trying to chain methods on empty collections or `nil` is dangerous and results in a lot of broken programs
 
 
-#### METHODS
+
+## <u>METHODS</u>
 
 - To perform selection, `select` evaluates the **return value of the block**
 
@@ -1667,7 +1964,7 @@ end  # => [2, 3, 4]
 
 
 
-### <u>Quiz 2 Incorrect Answers</u>
+### <u>Quiz 2 Incorrect Answers (lesson 4)</u> 
 
 1. Read the below statements regarding `each` and identify all the statements which are correct. You may assume that the block doesn't terminate the method prematurely.
 
@@ -2275,10 +2572,73 @@ end
          dealer_cards << deck.pop
      end
      ```
+   
+5. `reduce` or `inject`
 
+   - The `reduce` method can be used to take an array and reduce it to a single value.
 
+   - Combines all elements of an array by applying a binary operation (In [mathematics](https://en.wikipedia.org/wiki/Mathematics), a **binary operation** or **dyadic operation** is a calculation that combines two elements (called [operands](https://en.wikipedia.org/wiki/Operands)) to produce another element)
 
+     - This operation is specified by a block:
 
+       ```ruby
+       sum = numbers.reduce { |sum, number| sum + number }
+         sum / numbers.count
+       ```
+
+     - or symbol:
+
+       ```ruby
+       numbers.reduce(:+)
+       ```
+
+6. Float division
+
+   - 4 ways to do Float division
+
+   ```ruby
+   # foo and bar are both Integer values.
+   
+   # Coerce both operands to Float.
+   foo.to_f / bar.to_f
+   # Coerce only left one.
+   foo.to_f / bar
+   # Coerce only the right one.
+   foo / bar.to_f
+   # Use the dedicated fdiv method.
+   foo.fdiv(bar)
+   
+   ```
+
+7. `String#delete`
+
+   - Returns a **copy** of *str* (new string) with all characters in the intersection of its arguments deleted.
+
+   - `String#delete` to return a **new** `String` with all spaces removed from it.
+
+     ```ruby
+     'hi there mate'.delete(' ')
+     # ==> 'hitheremate'
+     ```
+
+8. `String#delete!`
+
+   - **Mutates the original string**
+
+9. `Array#delete`
+
+   - Mutates the array, **<u>which is why there is no array#delete!</u>**
+
+     ```ruby
+     a = [1, 2, 3]
+     a.delete(1)
+     # => a = [2, 3]
+     
+     a.delete(1)
+     # => NOMETHOD ERROR
+     ```
+
+     
 
 
 ## Assignment: Twenty-One Extra Features
