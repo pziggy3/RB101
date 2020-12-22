@@ -1498,6 +1498,10 @@ end  # => [2, 3, 4]
 
 # Lesson 4
 
+<<<<<<< HEAD
+=======
+### Collections Basics
+>>>>>>> 83ec7157a96f4eba5305512f2159c065f0bbb902
 
 
 ## Collections Basics
@@ -1723,7 +1727,9 @@ end  # => [2, 3, 4]
 
 
 
-#### Introduction to PEDAC Process
+--------------------------------------------------------------------------------------------------------------------------------------
+
+### Introduction to PEDAC Process
 
 1. P - Understand the Problem
 
@@ -1775,6 +1781,7 @@ end  # => [2, 3, 4]
 
 
 
+<<<<<<< HEAD
 ## Selection and Transformation
 
 - <u>Selection</u> is picking certain elements out of the collection depending on some criterion 
@@ -1932,25 +1939,150 @@ end  # => [2, 3, 4]
 
 
 ## <u>METHODS</u>
+=======
+--------------------------------------------------------------------------------------------------------------------------------------
+
+### METHODS
+
+#### `each`
+
+- The `each` method is functionally equivalent to using `loop` and represents a simpler way of accomplishing the same task. 
+
+- ```ruby
+  [1, 2, 3].each do |num|
+    puts num
+  end
+  ```
+
+  - `each` is a method that's being called on the array. The method **takes a block**, which is the `do...end` part
+  - The code within the block is executed for each iteration
+  - In this case the code within the block is `puts num` which means each element in the array will be output by the `puts` method
+  - How does the block know what `num` is? 
+    - For each iteration, `each` sends the value of the current element to the block in the form of an argument.
+    -  In this block, the argument to the block is `num` and it represents the value of the current element in the array.
+
+- Hashes, however, need two arguments in order to represent both the key and the value per iteration. Calling `each` on a hash looks a little different, since the block has two arguments:
+
+- ```ruby
+  hash = { a: 1, b: 2, c: 3 }
+  
+  hash.each do |key, value|
+    puts "The key is #{key} and the value is #{value}"
+  end
+  ```
+
+- Once `each` is done iterating, it **<u>*returns the original collection*</u>**
+
+#### `select`
+
+- ```ruby
+  [1, 2, 3].select do |num|
+    num.odd?
+  end
+  ```
+>>>>>>> 83ec7157a96f4eba5305512f2159c065f0bbb902
 
 - To perform selection, `select` evaluates the **return value of the block**
 
+  - The block returns a value on each iteration, which then gets evaluated by `select`. 
+
 - When evaluating the block's *return value*, `select` only cares about its *truthiness*. Everything in Ruby is considered "truthy" except for `nil` and `false`.
 
-- For each iteration, `each` sends the value of the current element to the block in the form of an argument. In this block
+- ```ruby
+  [1, 2, 3].select do |num|
+    num + 1
+  end
+  ```
 
-- Once `each` is done iterating, it *returns the original collection*
+  - For instance, the return value of the block in the above example will always be a "truthy" value. 
 
-- Similar to `select`, `map` also considers the return value of the block. The main difference between these two methods is that `map` uses the return value of the block to perform transformation instead of selection.****
+- The next follow up question is, what will the return value of `select` be?
 
-  - The key to remember here is that *`map` always performs transformation based on the return value of the block*.
+  -  `select` performs selection based on the truthiness of the block's return value.
+  - If the block's return value is always "truthy", then all of the elements will be selected
+  - **When an element is selected, it's placed in a *new collection*.** 
+    - In the above example, once `select` is done iterating, it *returns a new collection* containing all of the selected elements, because the **<u>selection criteria</u>** -- the **<u>block's return value</u>** -- is **<u>truthy</u>** for every element in the  array.
+
+- When working with `select`, it's important to always be aware of the *return value* of the block. 
+
+  - For example, if we place the statement `puts num` on the last line within the block, how will that affect the return value of `select`?
 
   - ```ruby
-    [1, 2, 3].map do |num|
-      num.odd?
+    [1, 2, 3].select do |num|
+      num + 1
       puts num
-    end   ===> Returns [nil, nil, nil]
+    end
+    
+    1
+    2
+    3
+    # => []
     ```
+
+    - `select` will now **<u>return an empty array</u>**. Why is that? 
+    - Since `puts num` is now the last evaluated expression in the block, it is the return  value of this expression which determines the return value of the block. 
+
+#### `map`
+
+- Similar to `select`, <u>`map` also considers the return value of the block</u>. The main difference between these two methods is that `map` uses the **return value of the block** to perform **transformation** instead of selection.****
+
+- ```ruby
+  [1, 2, 3].map do |num|
+    num * 2
+  end
+  
+  # => [2, 4, 6]
+  ```
+
+  - In this example, the return value of the block is the product of `num` and `2`
+  - `map` then takes this value and places it in a **new collection**. 
+  - This process is repeated for each element in the original collection. 
+
+- What happens if we write some code in the block that's not a transformation instruction?
+
+- ```ruby
+  [1, 2, 3].map do |num|
+    num.odd?
+  end
+  ```
+
+  - The key to remember here is that **<u><u>*`map` always performs transformation based on the return value of the block*.**</u>
+  - In this case, the <u>return value of the block</u> will be a <u>boolean</u>.
+    - This means that the collection returned by `map` will be an <u>array of booleans</u> `[true, false, true]`
+
+- What will the return value of `map` be in the following example?
+
+- ```ruby
+  [1, 2, 3].map do |num|
+    num.odd?
+    puts num
+  end 		
+  ```
+
+  - By looking at the last expression within the block, we know that the return value of the block will always be `nil`.
+  -  `map` doesn't care about truthiness, and takes this return value as the transformation criteria.
+    - Therefore, the collection returned by `map` is a **new array of `nil`s.** **<u>`[nil, nil, nil]`</u>**
+
+- What if the only statement within the block is a string? What will the return value of `map` be?
+
+- ```ruby
+  [1, 2, 3].map do |num|
+    'hi'
+  end
+  ```
+
+  - Since `'hi'` is the only statement within the block, the **return value of the block is `'hi'`,** which `map` will use as the transformation criteria. 
+    - Therefore, the above code will return an array where each element is `'hi'`. **<u>`["hi", "hi", "hi"]`</u>**
+
+#### Enumerable (side note)
+
+- `Array` and `Hash` both have an `each` method which is specific to them and defines how the items in those collections are iterated over.
+- The `select` and `map` (and other) methods are actually defined in a module called **Enumerable** and are made available to the `Array` and `Hash` classes.
+- The important thing to understand at this stage is that **certain collection types have access to specific methods for a reason**. 
+  - For example `String` doesn't use the `Enumerable` module and so you cannot call `select` or `map` on a string 
+    - (as we have already seen however we can easily convert a string to an array by calling `String#split` if we want access to the Enumerable methods of `Array`).
+
+### <u>Summary</u>
 
 - | Method   | Action         | Considers the return value of the block? | Returns a new collection from the method? | Length of the returned collection |
   | -------- | -------------- | ---------------------------------------- | ----------------------------------------- | --------------------------------- |
@@ -1960,9 +2092,243 @@ end  # => [2, 3, 4]
 
 - Important to note: **`each` always returns the original collection** 
 
-  - `each` also doesn't consider the return value of the block
+  - In the case of `each`, the return value of the block is simply ignored.
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+### MORE METHODS
+
+#### Enumerable#any?
+
+- ```ruby
+  [1, 2, 3].any? do |num|
+      num > 2
+  end
+  # => true
+  ```
+
+  - There are two return values that we need to be aware of here:
+    1. the <u>return value</u> of the **method** 
+    2. the <u>return value</u> of the **block**. 
+  - `any?` looks at the <u>*truthiness* of the **block's** return value</u> in order to determine what the <u>**method's** return value</u> will be.
+  - If the **block returns a "truthy" value** for any element in the collection, then the **method will return `true`.**
+
+- `any?` can also be used with a hash. The only difference is that the block requires two parameters in order to access the key and  the value.
+
+- ```ruby
+  { a: "ant", b: "bear", c: "cat" }.any? do |key, value|
+    value.size > 4
+  end
+  # => false
+  ```
+
+  - The above code returns a boolean, signifying whether any value in the hash is greater than 4.
+
+#### Enumerable#include?
+
+- `include?` **doesn't take a block**, but it does require **one argument.**
+
+  - It returns `true` if the argument exists in the collection and `false` if it doesn't.
+
+  - ```ruby
+    [1, 2, 3].include?(1)
+    # => true
+    ```
+
+- When called on a hash, `include?` **only checks the keys**, not the values.
+
+- ```ruby
+  { a: "ant", b: "bear", c: "cat" }.include?("ant")
+  # => false
+  
+  { a: "ant", b: "bear", c: "cat" }.include?(:a)
+  # => true
+  ```
+
+  - In fact, `Hash#include?` is essentially an alias for...
+
+    - ##### `Hash#key?` 
+
+    - ##### `Hash#has_key?`. 
+
+      - In practice, Rubyists would usually prefer these methods over `include?` as they make the intention more explicit.
+
+  - **<u>If we wanted to find out if a value exists within a hash</u>**, we could use...
+
+    - ##### `Hash#value?` 
+
+    - ##### `Hash#has_value?`  
+
+      - Example: `hash.has_value?('cat')`. 
+
+    - These methods have an advantage over, say, calling the `Hash#values` method and then chaining `include?` in that there is one less method to call: `hash.values.include?('cat')`.
+
+#### Enumerable#partition
+
+- `partition` divides up elements in the current collection into two collections, depending on the block's return value
+
+- ```ruby
+  [1, 2, 3].partition do |num|
+    num.odd?
+  end
+  # => [[1, 3], [2]]
+  ```
+
+  - The **return value is a nested array**, with the <u>inner arrays separated</u> based on the <u>return value of the block</u>. 
+
+- The most idiomatic way to use `partition` is to parallel assign variables to capture the divided inner arrays:
+
+  - ```ruby
+    odd, even = [1, 2, 3].partition do |num|
+      num.odd?
+    end
+    
+    odd  # => [1, 3]
+    even # => [2]
+    ```
+
+- Even if the collection is a hash, the return value of `partition` will always be an array.
+
+  - ```ruby
+    long, short = { a: "ant", b: "bear", c: "cat" }.partition do |key, value|
+      value.size > 3
+    end
+    # => [[[:b, "bear"]], [[:a, "ant"], [:c, "cat"]]]
+    ```
+
+  - To transform these arrays back into a hash, we can invoke **<u>`Array#to_h`</u>**.
+
+  - ```ruby
+    long.to_h # => { :b => "bear" }
+    short.to_h  # => { :a => "ant", :c => "cat" }
+    ```
 
 
+
+-----------------------
+
+### Practice Problems: Methods and More Methods
+
+##### 3) What is the return value of `reject` in the following code? Why?
+
+```ruby
+[1, 2, 3].reject do |num|
+  puts num
+end
+```
+
+- Answer: `[1, 2, 3]`
+  - Since `puts` always returns `nil`, you might think that no values would be selected and an empty array would be returned. 
+  - The important thing to be aware of here is how `reject` treats the return value of the block
+    - `reject` returns a new array containing items where the block's return value is "falsey". 
+    - In other words, if the return value was `false` or `nil` the element would be selected.
+
+##### 4) What is the return value of `each_with_object` in the following code? Why?
+
+```ruby
+['ant', 'bear', 'cat'].each_with_object({}) do |value, hash|
+  hash[value[0]] = value
+end
+```
+
+- Answer:  `{ "a" => "ant", "b" => "bear", "c" => "cat" }`
+  1. When we invoke `each_with_object`, **we pass in an object (`{}` here)** as an **argument**. 
+  2. That <u>object is then passed into the block</u> and its <u>updated value is returned</u> at the <u>end of each iteration.</u> 
+  3. Once `each_with_object` has iterated over the calling collection, it **returns the initially given object**, which now contains all of the updates.
+
+##### 5) What does `shift` do in the following code? How can we find out?
+
+```ruby
+hash = { a: 'ant', b: 'bear' }
+hash.shift
+```
+
+- Answer: `[:a, "ant"]`
+  - `shift` destructively removes the first key-value pair in `hash` and returns it as a two-item array. 
+
+##### 6) What is the return value of the following statement? Why?
+
+```ruby
+['ant', 'bear', 'caterpillar'].pop.size
+```
+
+- Answer: 11
+  - `pop` destructively removes the last element from the calling array and returns it.
+
+##### 7) What is the **block**'s return value in the following code? How is it determined? Also, what is the return value of `any?` in this code and what does it output?
+
+```ruby
+[1, 2, 3].any? do |num|
+  puts num
+  num.odd?
+end
+```
+
+- **Block's return value - `[true]`** 
+  - This is determined on the first iteration
+- **Method's return value - `true`**
+  - Since the `Array#any?` method returns `true` if the block ever returns a value other than `false` or `nil`, and the block returns `true` on the first iteration, we know that `any?` will return `true`.
+  - `any?` <u>stops iterating after this point</u> since there is no need to evaluate the remaining items in the array; therefore, `puts num` is only ever invoked for the first item in the array: `1`.
+
+##### 8) How does `take` work? Is it destructive? How can we find out?
+
+```ruby
+arr = [1, 2, 3, 4, 5]
+arr.take(2)
+```
+
+- `[1, 2]`
+  - take(n) → new_ary
+  - Returns first `n` elements from the array.
+  - <u>Non-destructive</u> (because a new array is returned)
+
+##### 9) What is the return value of `map` in the following code? Why?
+
+```ruby
+{ a: 'ant', b: 'bear' }.map do |key, value|
+  if value.size > 3
+    value
+  end
+end
+```
+
+- `[nil, "bear"]`
+  - If we look at the `if` condition (`value.size > 3`), we'll notice that it evaluates to `true` when the length of `value` is greater than `3`. 
+    - In this case, the only value with a length greater than `3` is `'bear'`.
+    - This means that for the first element, `'ant'`, the condition evaluates to `false` and `value` isn't returned.
+  - When none of the conditions in an `if` statement evaluates as `true`, the `if` statement itself returns `nil`. 
+
+##### 10) What is the return value of the following code? Why?
+
+```ruby
+[1, 2, 3].map do |num|
+  if num > 1
+    puts num
+  else
+    num
+  end
+end
+```
+
+- `[1, nil nil]`
+
+  - We can determine the block's return value by looking at the return value of the last statement evaluated within the block. 
+
+    - For the first element, the `if` condition evaluates to `false`, which means `num` is the block's return value for that iteration. 
+
+    - For the rest of the elements in the array, `num > 1` evaluates to `true`, which means `puts num` is the last statement evaluated, which in turn, means that the block's return value is `nil` for those iterations.
+
+      
+
+---------------------------------------
+
+### Practice Problems: Additional Practice
+
+
+
+
+
+-----------------------------------------------------------------------------
 
 ### <u>Quiz 2 Incorrect Answers (lesson 4)</u> 
 
@@ -2016,6 +2382,8 @@ Based on your observations of the code example, select all statements below whic
 <u>I selected C & D but C is wrong.</u>
 
 `Array#reject` *does* consider the return value of the block; since in this case the return value will be `nil` in each case, this will always be evaluated as *falsy* and so the array that is returned contains all of the flavor strings. The array returned by `reject` it is a *new* array however, and not the original `flavors` array.
+
+
 
 
 
@@ -2551,6 +2919,31 @@ end
      (-11).divmod(3.5)   #=> [-4, 3.0]
      11.5.divmod(3.5)    #=> [3, 1.0]
      ```
+     
+     ```ruby
+     DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+     
+     def integer_to_string(number)
+         result = ''
+         loop do
+             number, remainder = number.divmod(10)
+             # e.g. 432, 1 = 4321.divmod(10)
+             result.prepend(DIGITS[remainder])
+             # ''.prepend(DIGITS[1]) => ''.prepend('1')=> '1'
+             breaks if number == 0
+             # 0, 1 = 1.divmod(10)
+         end
+         result
+     end
+     
+     integer_to_string(4321) == '4321'
+     integer_to_string(0) == '0'
+     integer_to_string(5000) == '5000'
+     
+     # NOTE: String#prepend is a MUTATING METHOD, this is bc there is no non-mutating form of prepend
+     ```
+     
+     
 
 4. `times`
 
@@ -2623,7 +3016,148 @@ end
 
 8. `String#delete!`
 
+<<<<<<< HEAD
    - **Mutates the original string**
+=======
+5. `<=>` 
+
+   - **Spaceship operator**
+
+   - It compares the left side against the right side, then returns +1 if the left side is greater than the right, -1 if the left side is smaller  than the right, and 0 if the values are the same. 
+
+   - This is often useful when you need to know whether a number is positive, negative, or zero.
+
+     ```ruby
+     def signed_integer_to_string(number)
+       case number <=> 0
+       when -1 then "-#{integer_to_string(-number)}"
+       when +1 then "+#{integer_to_string(number)}"
+       else         integer_to_string(number)
+       end
+     end
+           
+     signed_integer_to_string(4321) == '+4321'
+     signed_integer_to_string(-123) == '-123'
+     signed_integer_to_string(0) == '0'
+     ```
+
+6. `reduce`
+
+   ```ruby
+   numbers = [1, 2, 3, 4]
+   
+   sum = numbers.reduce { |sum, number| sum + number }
+   # OR
+   sum = numbers.reduce(:+)
+   ```
+
+7. `&:`
+
+   - Shorthand that can allow you to use `map` (iterate and change the return value) without using a block
+
+     ```ruby
+     def sum(integer)
+         integer.to_s.chars.map(&:to_i).reduce(:+)
+     end
+     
+     # Same as...
+     
+     def sum2(integer)
+         sum = 0
+         str_digits = number.to_s.chars
+         
+         str_digits.each do |str_digit|
+             sum += str_digit.to_i
+         end
+         
+         sum
+     end
+     ```
+
+8. **STRIPPING NON-ALPHABETIC CHARACTERS FROM STRING**
+
+   - Using `gsub`
+
+   ```ruby
+   string = 'wer,,^WER'
+   string.gsub!(/[^a-z]/i, '')
+   # => "werWER"
+   
+   # Meaning: Matches the case-insensitive letters that are NOT a-z, replaces them with '' (nothing)
+   # Note: ^ --> not 
+   # Note: /i --> case insensitive
+   ```
+
+   - Using `delete`
+
+   ```ruby
+   word =' rhwer,,,2e'
+   word.delete!('^A-Za-z')
+   
+   => "rhwere"
+   ```
+
+   
+
+9. `reverse_each` 
+
+   - reverse_each is like each, except it processes the elements in reverse order. Note that unlike each, reverse_each only applies to Arrays.
+
+     ```ruby
+     def reverse2(array)
+       result_array = []
+       array.reverse_each { |element| result_array << element }
+       result_array
+     end
+     
+     p reverse(%w(a b e d c)) == %w(c d e b a)  # => true
+     ```
+
+10. `Array#|`
+
+    - This is a method that gives the set union of two arrays, so the result contains no duplicates
+
+      ```ruby
+      def merge2(array_1, array_2)
+        array_1 | array_2
+      end
+      
+      p merge2([1, 3, 5], [3, 6, 9]) == [1, 3, 5, 6, 9]
+      ```
+
+11. `Array#slice`
+
+    - `slice` takes two arguments: the first one is the starting index and the second one is the length of the slice. 
+
+      ```ruby
+      def halvsies(array)
+        middle = (array.size / 2.0).ceil
+        first_half = array.slice(0, middle)
+        second_half = array.slice(middle, array.size - middle)
+        [first_half, second_half]
+      end
+      
+      halvsies([1, 2, 3, 4]) == [[1, 2], [3, 4]]
+      ```
+
+12.  `Array#find_index`
+
+    -  `find_index` returns the **index number of the found element**, which will always have a truthy value, or `nil` if no such element is present
+
+    - It can scan an array for the first element that has the specified value
+
+      ```ruby
+      a = [1, 2, 3]
+      a.find_index(2)
+      
+      # => 1
+      ```
+
+13. 
+
+
+
+>>>>>>> 83ec7157a96f4eba5305512f2159c065f0bbb902
 
 9. `Array#delete`
 

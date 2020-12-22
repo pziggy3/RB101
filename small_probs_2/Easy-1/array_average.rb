@@ -6,6 +6,7 @@ positive integers. Your result should also be an integer.
 """
 
 # My Solution
+# Constructing the block in this way necessitates creating a variable outside the block...so use the L.S. Solution instead.
 def average(array)
   sum = 0
   array.reduce do |total, num|

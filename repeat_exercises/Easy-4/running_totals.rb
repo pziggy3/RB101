@@ -20,6 +20,7 @@ puts running_total([]) == []
 
 # L.S. Solution
 def running_total2(array)
+  # Remember that map if for transformation...we're transforming each element of the array
   sum = 0
   array.map { |value| sum += value }
 end
