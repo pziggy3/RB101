@@ -2577,7 +2577,7 @@ end
 
 ## METHOD DESCRIPTION AND EXAMPLES
 
-1. `each_char` (enumerable)
+1. `String#each_char` 
 
    - Passes [each](https://apidock.com/ruby/String/each) character in *str* to the given block, or returns an enumerator if no block is given.
 
@@ -2591,7 +2591,7 @@ end
      h e l l o
      ```
 
-2. `unshift` (array)
+2. `Array#unshift`
 
    - Prepends objects to the front of `self,` moving other elements upwards. See also [Array#shift](https://apidock.com/ruby/Array/shift) for the opposite effect.
 
@@ -2601,7 +2601,7 @@ end
      a.unshift(1, 2)  #=> [ 1, 2, "a", "b", "c", "d"]
      ```
 
-3. `divmod`
+3. `Integer#divmod`
 
    - returns the integer quotient and modulus after performing the division.
 
@@ -2638,7 +2638,7 @@ end
      
      
 
-4. `times`
+4. `Integer#times`
 
    - Iterates the given block `int` times, passing in values from zero to int - 1.
 
@@ -2681,7 +2681,7 @@ end
      signed_integer_to_string(0) == '0'
      ```
 
-6. `reduce`
+6. `Enumerable#reduce/inject`
 
    ```ruby
    numbers = [1, 2, 3, 4]
@@ -2693,7 +2693,7 @@ end
 
 7. `&:`
 
-   - Shorthand that can allow you to use `map` (iterate and change the return value) without using a block
+   - Shorthand that can allow you to use `map` (iterate and change the return value) **without using a block**
 
      ```ruby
      def sum(integer)
@@ -2713,6 +2713,27 @@ end
          sum
      end
      ```
+
+   - <u>Example 2</u> - Write a method that takes a single String argument and returns a new string that contains the original value of the argument with the first character of every word capitalized and all other letters lowercase.
+
+     ```ruby
+     def word_cap2(words)
+       words.split.map(&:capitalize).join(' ')
+     end
+     
+     # Same as...
+     
+     def word_cap(string)
+       new_word_array = string.split.map do |word|
+         word = word.capitalize
+       end
+       new_word_array.join(' ')
+     end
+     ```
+
+     
+
+   - 
 
 8. **STRIPPING NON-ALPHABETIC CHARACTERS FROM STRING**
 
@@ -2739,7 +2760,7 @@ end
 
    
 
-9. `reverse_each` 
+9. `Array#reverse_each` 
 
    - reverse_each is like each, except it processes the elements in reverse order. Note that unlike each, reverse_each only applies to Arrays.
 
@@ -2780,7 +2801,7 @@ end
       halvsies([1, 2, 3, 4]) == [[1, 2], [3, 4]]
       ```
 
-12.  `Array#find_index`
+12. `Array#find_index/index`
 
     -  `find_index` returns the **index number of the found element**, which will always have a truthy value, or `nil` if no such element is present
 

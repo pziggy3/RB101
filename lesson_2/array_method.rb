@@ -1,5 +1,5 @@
 def array_method(array)
-  counter = 0 
+  counter = 0
 
   while counter < array.length
     if counter.odd?
