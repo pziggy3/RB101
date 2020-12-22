@@ -1496,12 +1496,9 @@ end  # => [2, 3, 4]
 
 
 
-# Lesson 4
+# <u>Lesson 4</u>
 
-<<<<<<< HEAD
-=======
-### Collections Basics
->>>>>>> 83ec7157a96f4eba5305512f2159c065f0bbb902
+
 
 
 ## Collections Basics
@@ -1914,7 +1911,7 @@ end  # => [2, 3, 4]
   end
   ```
 
-#### <u>More Flexible Methods</u>
+#### More Flexible Methods
 
 - Let's update our `double_numbers` method to not only be able  to double the values in an array, but to multiply by any number. For  example, let's create a method called `multiply` that can take an additional argument to determine the *transformation criteria*.
 
@@ -1939,10 +1936,8 @@ end  # => [2, 3, 4]
 
 
 ## <u>METHODS</u>
-=======
---------------------------------------------------------------------------------------------------------------------------------------
 
-### METHODS
+--------------------------------------------------------------------------------------------------------------------------------------
 
 #### `each`
 
@@ -2096,7 +2091,9 @@ end  # => [2, 3, 4]
 
 --------------------------------------------------------------------------------------------------------------------------------------
 
-### MORE METHODS
+
+
+## MORE METHODS
 
 #### Enumerable#any?
 
@@ -2387,7 +2384,7 @@ Based on your observations of the code example, select all statements below whic
 
 
 
-## Lesson 5: Advanced Ruby Collections
+## <u>Lesson 5: Advanced Ruby Collections</u>
 
 ### <u>Sorting</u>
 
@@ -3174,26 +3171,54 @@ end
       # => 1
       ```
 
-13. 
+13. ###   <u>**Round result to 3 decimal places**</u>
+
+    - Use : `result = 234.42345`
+    - `format('%.3f', result)`
+
+    ```ruby
+    def show_multiplicative_average2(numbers)
+      product = 1.to_f
+      numbers.each { |number| product *= number }
+      average = product / numbers.size
+      puts "The result is #{format('%.3f', average)}"
+    end
+    
+    show_multiplicative_average2([3, 5])                # => The result is 7.500
+    show_multiplicative_average2([6])                   # => The result is 6.000
+    show_multiplicative_average2([2, 5, 7, 11, 13, 17]) # => The result is 28361.667
+    ```
+
+14. `Array#delete`
+
+    - Mutates the array, **<u>which is why there is no array#delete!</u>**
+
+    - ```ruby
+      a = [1, 2, 3]
+      a.delete(1)
+      # => a = [2, 3]
+      
+      a.delete(1)
+      # => NOMETHOD ERROR
+      ```
+
+      
+
+
+
+
+
+
+
+
 
 
 
 >>>>>>> 83ec7157a96f4eba5305512f2159c065f0bbb902
 
-9. `Array#delete`
 
-   - Mutates the array, **<u>which is why there is no array#delete!</u>**
 
-     ```ruby
-     a = [1, 2, 3]
-     a.delete(1)
-     # => a = [2, 3]
-     
-     a.delete(1)
-     # => NOMETHOD ERROR
-     ```
 
-     
 
 
 ## Assignment: Twenty-One Extra Features
