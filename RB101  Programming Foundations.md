@@ -1952,10 +1952,11 @@ end  # => [2, 3, 4]
   - `each` is a method that's being called on the array. The method **takes a block**, which is the `do...end` part
   - The code within the block is executed for each iteration
   - In this case the code within the block is `puts num` which means each element in the array will be output by the `puts` method
-  - How does the block know what `num` is? 
+  - #### **How does the block know what `num` is?** 
+    
     - For each iteration, `each` sends the value of the current element to the block in the form of an argument.
-    -  In this block, the argument to the block is `num` and it represents the value of the current element in the array.
-
+  -  In this block, the argument to the block is `num` and it represents the value of the current element in the array.
+  
 - Hashes, however, need two arguments in order to represent both the key and the value per iteration. Calling `each` on a hash looks a little different, since the block has two arguments:
 
 - ```ruby
@@ -1975,8 +1976,6 @@ end  # => [2, 3, 4]
     num.odd?
   end
   ```
->>>>>>> 83ec7157a96f4eba5305512f2159c065f0bbb902
-
 - To perform selection, `select` evaluates the **return value of the block**
 
   - The block returns a value on each iteration, which then gets evaluated by `select`. 
@@ -2327,7 +2326,7 @@ end
 
 -----------------------------------------------------------------------------
 
-### <u>Quiz 2 Incorrect Answers (lesson 4)</u> 
+### Quiz 2 Incorrect Answers (lesson 4) 
 
 1. Read the below statements regarding `each` and identify all the statements which are correct. You may assume that the block doesn't terminate the method prematurely.
 

@@ -110,6 +110,8 @@ numbers.each do |number|
   p number
   numbers.shift(1)
 end
+# 1 3
+# In our first example, the removal of the first item in the first pass (1) changes the value found for the second pass. (Instead of 2, it is now 3)
 
 # What would be output by this code?
 numbers = [1, 2, 3, 4]
@@ -117,6 +119,9 @@ numbers.each do |number|
   p number
   numbers.pop(1)
 end
+# 1 2
+# In our second example, we are shortening the array each pass just as in the first example...
+# ...but the items removed (4 and 3) are beyond the point we are sampling from in the abbreviated loop.
 
 
 #################################################################################################################
@@ -128,9 +133,31 @@ words = "the flintstones rock"
 words = "The Flintstones Rock"
 # Write your own version of the rails titleize implementation.
 
+def titleize(string)
+  string.split.map { |word| word[0].upcase + word[1..-1] }.join(" ")
+end
+
+def titleize2(string)
+  new_word = []
+  string.split.map do |word|
+    new_word << word[0].upcase + word[1..-1]
+  end
+  new_word.join(' ')
+end
+
+def titleize3(string)
+  new_array = string.split.map do |word|
+    word[0].upcase + word[1..-1]
+  end
+  new_array.join(' ')
+end
+
+p titleize("the flintstones rock") == "The Flintstones Rock"
+p titleize2("the flintstones rock") == "The Flintstones Rock"
+p titleize3("the flintstones rock") == "The Flintstones Rock"
+
 
 #################################################################################################################
-
 
 
 # 10) Given the munsters hash below
@@ -151,3 +178,60 @@ munsters = {
   "Marilyn" => { "age" => 23, "gender" => "female", "age_group" => "adult" } }
 
   # Note: a kid is in the age range 0 - 17, an adult is in the range 18 - 64 and a senior is aged 65+.
+
+#################################################################################################################
+
+# My Solution
+# INCORRECT - This can't be right because map returns an array
+new_munsters = munsters.map do |name, hash|
+  case hash["age"]
+  when 0..17
+    kid = {"age-group" => "kid"}
+    hash.merge!(kid)
+  when 18..64 
+    adult = {"age-group" => "adult"}
+    hash.merge!(adult)
+  else
+    senior = {"age-group" => "adult"}
+    hash.merge!(senior)
+  end
+end
+
+# CORRECT - Instead, use each
+munsters.each do |name, hash|
+  case hash["age"]
+  when 0..17
+    kid = {"age-group" => "kid"}
+    hash.merge!(kid)
+  when 18..64 
+    adult = {"age-group" => "adult"}
+    hash.merge!(adult)
+  else
+    senior = {"age-group" => "adult"}
+    hash.merge!(senior)
+  end
+end
+
+p munsters
+
+#################################################################################################################
+
+# L.S. Solution
+munsters = {
+  "Herman" => { "age" => 32, "gender" => "male" },
+  "Lily" => { "age" => 30, "gender" => "female" },
+  "Grandpa" => { "age" => 402, "gender" => "male" },
+  "Eddie" => { "age" => 10, "gender" => "male" },
+  "Marilyn" => { "age" => 23, "gender" => "female"}
+}
+
+munsters.each do |name, details|
+  case details["age"]
+  when 0..18
+    details["age-group"] = "kid"
+  when 18...65
+    details["age_group"] = "adult"
+  else
+    details["age_group"] = "senior"
+  end
+end
