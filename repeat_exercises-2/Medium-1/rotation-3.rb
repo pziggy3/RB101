@@ -1,5 +1,7 @@
 # Write a method that takes an integer as argument, and returns the maximum rotation of that argument. 
 
+################################################################################
+
 def rotate_array(array)
   array[1..-1] + [array[0]]
 end
@@ -46,6 +48,8 @@ p max_rotation2(3) == 3
 p max_rotation2(35) == 53
 p max_rotation2(105) == 15 # the leading zero gets dropped
 p max_rotation2(8_703_529_146) == 7_321_609_845
+
+################################################################################
 
 # 2) There is an edge case in our problem when the number passed in as the argument has multiple consecutive zeros.
 # Can you create a solution that preserves zeros?

@@ -1,4 +1,6 @@
-# Write a method that can rotate the last n digits of a number. For example:
+# Write a method that can rotate the last n digits of a number.
+
+################################################################################
 
 def rotate_array(array)
   array[1..-1] + [array[0]]
@@ -7,16 +9,13 @@ end
 def rotate_rightmost_digits(number, rotated_digits)
   # Converting number to digit array and slicing out digits to be rotated
   digit_array = number.to_s.chars
-  rotated_digits = digit_array.slice!(-(rotated_digits), rotated_digits)
+  digits_to_rotate = digit_array.slice!(-(rotated_digits), rotated_digits)
 
   # Rotating the digits and appending them to original digit array
-  rotated_digits = rotate_array(rotated_digits)
-  digit_array << rotated_digits
+  digit_array << rotate_array(digits_to_rotate)
 
   # Converting the rotated digit array back to an integer
-  rotated_digits = digit_array.flatten.join.to_i
-
-  rotated_digits
+  digit_array.flatten.join.to_i
 end
 
 p rotate_rightmost_digits(735291, 1) == 735291

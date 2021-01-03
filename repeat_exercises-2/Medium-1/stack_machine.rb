@@ -1,5 +1,7 @@
 # Write a method that implements a miniature stack-and-register-based programming language that has the following commands:
 
+################################################################################
+
 def minilang(program)
   stack = []
   register = 0

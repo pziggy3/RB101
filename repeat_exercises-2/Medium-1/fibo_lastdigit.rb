@@ -1,4 +1,7 @@
-# In this exercise, you are going to compute a method that returns the last digit of the nth Fibonacci number.
+# In this exercise, you are going to compute a method that returns
+# the last digit of the nth Fibonacci number.
+
+################################################################################
 
 def fibonacci(nth)
   return 1 if nth <= 2
@@ -18,6 +21,7 @@ end
 def fibonacci_last(nth)
   fibonacci(nth).to_s[-1].to_i
 end
+
 # p fibonacci_last(15)        # -> 0  (the 15th Fibonacci number is 610)
 # p fibonacci_last(20)        # -> 5 (the 20th Fibonacci number is 6765)
 # p fibonacci_last(100)       # -> 5 (the 100th Fibonacci number is 354224848179261915075)

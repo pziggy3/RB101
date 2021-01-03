@@ -1,4 +1,7 @@
-# Write a method that takes one argument, the total number of switches, and returns an Array that identifies which lights are on after n repetitions.
+# Write a method that takes one argument, the total number of switches, and returns
+# an Array that identifies which lights are on after n repetitions.
+
+################################################################################
 
 # My Solution
 def thousand_lights(switch_number)
@@ -24,6 +27,7 @@ end
 p thousand_lights(5)
 p thousand_lights(10)
 
+################################################################################
 
 # LS Solution
 # initialize the lights hash

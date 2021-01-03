@@ -1,6 +1,8 @@
 # Write a method that rotates an array by moving the first element to the 
 # end of the array. The original array should not be modified.
 
+################################################################################
+
 def rotate_array(array)
   rotated_array = array.dup
 
@@ -13,7 +15,6 @@ end
 p rotate_array([7, 3, 5, 2, 9, 1]) == [3, 5, 2, 9, 1, 7]
 p rotate_array(['a', 'b', 'c']) == ['b', 'c', 'a']
 p rotate_array(['a']) == ['a']
-
 x = [1, 2, 3, 4]
 p rotate_array(x) == [2, 3, 4, 1]   # => true
 p x == [1, 2, 3, 4]                 # => true
@@ -38,7 +39,7 @@ def rotate_string(string)
   string[1..-1] + string[0]
 end
 p rotate_string('hello') == 'elloh'
-# This works because strings are indexed collection.
+# This works because strings are also indexed collections.
 
 
 def rotate_integer(integer)
