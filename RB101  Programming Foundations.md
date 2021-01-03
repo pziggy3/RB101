@@ -463,11 +463,26 @@ Assignment : Calculator Bonus Features
   ```
 
   - `c` doesn't change because it is a copy of `a` that occupies different address space in memory
+  
   - `b` changes because it is pointing to the same object (space in memory) as `a` -- and the object itself changes 
+  
+  - What if the last line was `c = a.uniq!`?
+  
+    - ```ruby
+      a = [1, 2, 3, 3]
+      b = a
+      c = a.uniq!
+      
+      p a  # => [1, 2, 3]
+      p b  # => [1, 2, 3]
+      p c  # => [1, 2, 3]
+      ```
+  
+      
 
 
 
-### Variable References and Mutability of Ruby Object
+# Variable References and Mutability of Ruby Objects
 
 #### Variables and References
 
@@ -544,15 +559,15 @@ Assignment : Calculator Bonus Features
 
 
 
-### Mutating and Non-Mutating Methods in Ruby
+# Mutating and Non-Mutating Methods in Ruby
 
 - Variables don't actually contain values, but instead serve as <u>references to objects</u>
 
 
 
-#### Mutating and Non-Mutating Methods
+### Mutating and Non-Mutating Methods
 
-<u>Non-Mutating Methods</u>
+#### <u>Non-Mutating Methods</u>
 
 - A method is said to be non-mutating with respect to an **argument** or its **calling object** if it doesn't modify it
 - Most methods don't mutate either
@@ -560,7 +575,7 @@ Assignment : Calculator Bonus Features
 - All methods are non-mutating with respect to **immutable objects** --- a method can't modify an immutable object
   - Thus, any method that operates on <u>numbers</u> and <u>boolean values</u> is guaranteed to be non-mutating with respect to that value
 
-<u>Assignment is Non-Mutating</u>
+#### <u>Assignment is Non-Mutating</u>
 
 - Assignment tells to Ruby to bind an object to a variable
 
@@ -578,15 +593,21 @@ Assignment : Calculator Bonus Features
   t = fix(s)
   ```
 
-  1. We pass `s` to `fix`; this **binds the** **String** represented represented bsy **"hello"** to `value`
+  1. We pass `s` to `fix`; this **binds the** **String** represented represented by **"hello"** to `value`
   2. `s` and `value` are now **aliases** for the String
   3. We then call `#upcase!` which converts the String to uppercase --- a new String is not created --- the String that is referenced by both `s` and `value` now contain the value `"HELLO"`
   4. We then call `#concat` on `value`, which also **modifies** `value` instead of creating a new String --- The String now has a value of `"HELLO!"`, and both `s` and `value` **reference** that object
   5. Finally, we **return a reference to the String** and store it in `t`
      - The only time we create a new String is when we assign "hello" to `s`
+     
      - The rest of the time, we work directly with that object, modifying it as needed
+  
      - Thus, both `s` and `t` reference the same String and that String has the value `HELLO!` 
-
+     
+       
+  
+  Let’s modify the original code slightly:
+  
 - ```ruby
   def fix(value)
       value = value.upcase
@@ -597,12 +618,23 @@ Assignment : Calculator Bonus Features
   t = fix(s)
   ```
 
-  1. We assign the return value of `value.upcase` back to `value`
-  2. Unlike `#upcase!`, `#upcase` **does not modify the String referenced by `value`**; instead, it **creates a new copy of the String referenced by value...**
-  3. ...**modifies** the copy, and then **returns a reference to the copy**
-  4. We then bind `value` to the returned reference
-     - `s` and `t` now reference different objects, and the String referenced by `s` has not been modified
-     - After the assignment, `value` references a completely new Sting - the String referenced by `#upcase`'s return value
+  1. We pass `s` to `fix`, which **binds** the String object "hello" to `value`
+
+  2. `s` and `value` are now aliases for String object
+
+  3. We assign the return value of `value.upcase` back to `value`
+
+  4. Unlike `#upcase!`, `#upcase` **does not modify the String referenced by `value`**; instead, it creates a **new copy** of the String referenced by value, **modifies** the copy, and then **returns a reference** to the copy
+
+  5. We then bind `value` to the returned reference
+     
+- After the assignment, `value` references a completely new Sting - the String referenced by `#upcase`'s return value
+     
+6. `#concat` is called on `value` which **modifies** `value` 
+  
+7. A reference to `value` is returned from the method and stored in `t`
+  
+     
 
 ![](/home/patrick/Desktop/using-assignment.png)
 
@@ -678,7 +710,7 @@ Assignment : Calculator Bonus Features
 
 
 
-### Mutating Methods
+#### <u>Mutating Methods</u>
 
 - A method is said to be mutating with respect to an **argument** or **its caller** if it modifies it
   - Note: "Caller" refers to the function that calls another function (the callee) 
@@ -706,7 +738,7 @@ Assignment : Calculator Bonus Features
 
 
 
-### Indexed Assignment is Mutating
+#### <u>Indexed Assignment is Mutating</u>
 
 - ```ruby
   str[3] = 'x'
@@ -741,9 +773,13 @@ Assignment : Calculator Bonus Features
   
   ```
 
-  - The indexed assignment does cause **a new reference to be made**, but it is the **collection element (e.g., (`a[1]`)** that is **bound to the new object** (<u>its object ID changes</u>), NOT the **collection (enclosing object)** itself (<u>the object id doesn't change</u>)
+  - Here, we can see that we have mutated the Array `a` by assigning a new value to `a[1]`, but have not created a new Array. `a[1] = 9` isn’t assigning anything to `a`; it is assigning `9` to `a[1]`; that is, this assignment changes `a[1]` so that it references the new object `9`.
+  
+  - The indexed assignment does cause **a new reference to be made**, but it is the **collection element (e.g., (`a[1]`)** that is **bound to the new object** (<u>its object ID changes</u>), NOT the **collection (enclosing object)** itself (<u>the array's object id doesn't change</u>)
+  
+    
 
-### Concatenation is Mutating
+#### <u>Concatenation is Mutating</u>
 
 - The `#<<` method used by collections like Arrays and  Hashes, as well as the String class, implements concatenation; this is  very similar to the `+=` operator
 
@@ -759,7 +795,7 @@ Assignment : Calculator Bonus Features
   >> s << ' World'
   => "Hello World"
   
-  >> s
+  >> sWe can also see that
   => "Hello World"
   
   >> s.object_id
@@ -768,9 +804,12 @@ Assignment : Calculator Bonus Features
   ```
 
   - The `#>>` method is mutating **with respect to its caller (`s`) **, so the <u>object referenced by `s`</u> is modified, NO new objects are created
+  
   - Thus, `s` still references the same object it did prior to the `#<<` call
+  
+    
 
-#### Setters are Mutating
+#### <u>Setters are Mutating</u>
 
 - With *indexed assignment*, the elements of a collection (or the characters of a String) are replaced
 - with *setters*, the state of the object is modified, usually by modifying an instance variable.
@@ -786,7 +825,7 @@ person.age = 23
 
 
 
-#### Refining the Mental Model
+### Refining the Mental Model
 
 - Immutable objects *seem* to be passed by value, while mutable objects *seem* to be passed by reference
 
@@ -794,13 +833,13 @@ person.age = 23
 
   
 
-#### Conclusion
+### Conclusion
 
-- Methods in Ruby can be mutating or non-mutating with respect to individual arguments, include the caller(???)
-  - A method that does not modify its arguments or caller is non-mutating  with respect to those objects
-  - a method that does modify some of them is mutating with respect to those modified objects.
+- Methods in Ruby can be mutating or non-mutating with respect to individual arguments, including the caller.
+  - A method that does not modify its arguments or caller is <u>non-mutating</u>  with respect to those objects
+  - a method that does modify some of them is <u>mutating</u> with respect to those modified objects.
 
-- We've also learned that assignment in Ruby acts like a non-mutating method — it doesn’t modify any objects, but does alter the binding for the  target variable
+- We've also learned that <u>assignment</u> in Ruby acts like a non-mutating method — it doesn’t modify any objects, but does alter the binding for the target variable 
 
 
 
@@ -812,25 +851,23 @@ person.age = 23
 
 ### What is Object Passing?
 
-- When you call a method with some expression as an argument, that expression is evaluated by Ruby and reduced, ultimately, to an object
-  - can be an object literal, variable name, or complex expression
-- Ruby then makes that object **available inside the method**
-- This is called **passing the object to the method**, or *object passing*
+- When you call a method with some expression as an argument, that expression (object literal, variable name, or complex expression) is evaluated by Ruby and reduced, ultimately, to an **object** 
+  - Ruby then makes that object **available inside the method.** This is called **passing the object to the method**, or *object passing*
 - In addition to method arguments, the <u>caller (sometimes called the receiver</u> of a method call --- the <u>object</u> on which the method is called, can be thought of as an **implied argument**
-- **Return values** - passed by methods back to the caller (the object on which the method is called)
-- Objects
+- **Return values** - Just as much as arguments are passed to methods, <u>return values are passed by those methods back to the caller</u> (the object on which the method is called)
+- Objects can be:
   - literals
-  - name objects (variables + constants)
+  - named objects (variables + constants)
   - complex expressions
-- Methods
+- Methods can include:
   - methods
   - blocks
   - procs
   - lambdas
   - operators
-- Arguments
+- Arguments can include:
   - actual arguments
-  - the **caller of the method** (the object on which the method is called)
+  - the **caller of the method** (the object on which the method is called) (The caller of `String.gsub!` is `String`)
   - operator operands (**3** + **4**)
   - return values
 
@@ -838,8 +875,13 @@ person.age = 23
 
 #### Evaluation Strategies
 
-- Ruby uses **strict evaluation exclusively** - every expression is evaluated and converted to an object before it is passed along to a method
-- Two most common strict evaluation strategies: pass by value + pass by reference
+- Every computer programming language uses some sort of *evaluation strategy* when passing objects.
+  - This strategy determines <u>when expressions are evaluated</u>, and <u>what a method can do with the resulting objects.</u>
+
+- Ruby uses <u>**STRICT EVALUATION exclusively**</u> - every expression is <u>evaluated</u> and <u>converted to an object</u> **before** it is <u>passed along to a method</u>
+- Two most common strict evaluation strategies: 
+  - pass by value
+  - pass by reference
 
 #### Pass by Value
 
@@ -885,8 +927,8 @@ end
 ```
 
 - The object (a number) is immutable, but `number` and `value` reference the same object (as shown by the same object ids)
-- <u>This implies that pass by value is **NOT** employed for immutable objects, or else `number` would be a copy of `value` with a different object id</u>
-- It appears to be using **pass by reference** when passing immutable AND mutable objects
+  - <u>This implies that pass by value is **NOT** employed for immutable objects, or else `number` would be a copy of `value` with a different object id</u>
+  - It appears to be using **pass by reference** when passing **immutable AND mutable objects**
 -  “But, we can’t modify immutable objects! Isn’t that what pass by reference is all about?”
   - Pass by reference isn't limited to mutating methods - it can be used with immutable objects
   - There may be a reference passed, **but the reference isn't a guarantee that the object can be modified**
@@ -897,15 +939,94 @@ end
 
 - Assignment throws in a monkey wrench in the statement that "Ruby is exclusively pass by reference"
   - In a pure pass by reference language, assignment would be a mutating operation, but it **isn't** because...
-    - **Ruby variables and constants aren't objects, but are REFERENCES to objects**
-    - **Assignment merely changes which object is bound to a particular variable**
-  - While we can change which object is bound to a variable inside of a  method, we can’t change the binding of the original arguments. We can  change the objects if the objects are mutable, but the **references  themselves are immutable** as far as the method is concerned.
-  - Since pass by value passes <u>copies</u> of arguments into a method, Ruby appears to be <u>making copies of the references</u>, then **passing those copies to the method**
-  - The method can use the references to <u>modify the referenced object</u>, but **since the reference itself is a copy, the original reference cannot be changed**
-    - *pass by reference value*, *pass by reference of the value*, or *pass by value of the reference*
-  - In short, ruby is neither pass by value nor pass by reference, but  instead employs a third strategy that blends the two strategies
+    - Ruby variables and constants aren't objects, but are **REFERENCES to objects**. Assignment merely changes which object is bound to a particular variable
+    - This matters because variables were objects themselves, then assignment would change the state of the object, or mutate the object.
+- While we can change which object is bound to a variable inside of a  method, *we can’t change the binding of the original arguments.* 
+- We can  change the objects if the objects are mutable, but the *(original) references themselves are immutable* as far as the method is concerned.
+  - Since pass by value passes copies of arguments into a method, Ruby appears to be <u>making copies of the references</u>, then **passing those copies to the method**
+  - The method can use the **copied references** to <u>modify the referenced object</u>, but **since the reference itself is a copy, the original reference cannot be changed**
+    - this is called *pass by reference value*, *pass by reference of the value*, or *pass by value of the reference*
+  - In short, ruby is neither pass by value nor pass by reference, but instead employs a third strategy that blends the two strategies
 
 
+
+<u>Examples</u>
+
+- ```ruby
+  def print_id number
+    puts "In method object id = #{number.object_id}"
+  end
+  
+  value = 33
+  puts "Outside method object id = #{value.object_id}"
+  print_id value
+  
+  # Outside method object id = 67
+  # In method object id = 67
+  ```
+
+  - If Ruby was pass by value, then a copy of `value` with a different object id would be output by the method. 
+
+  - **This proves that even with immutable objects like Integers, Ruby isn't pass by value.**
+
+  - So what's happening?
+
+    1. A reference (pointer to the same object) to `value` is made.
+    2. Then, a **copy** of this reference is made a passed to the method.
+    3. While this copy of the reference CAN modify the state of (or mutate) the referenced object `33`,  the **original** reference **cannot** be changed.
+    4. Because a **copy of the original reference** is passed to the method, RATHER THAN A COPY OF THE ARGUMENT ITSELF, the object id stays the same.
+
+    
+
+- ```ruby
+  def plus(x, y)
+    x = x + y
+  end
+  
+  a = 3
+  b = plus(a, 2)
+  puts a # 3
+  puts b # 5
+  ```
+
+  1.  Internally, references (pointers to the same object) of  `a` and `2` are made
+  2. **Copies of these references** (which also point to the same objects) are **passed to the method.** 
+     - this binds the integers represented by `3` to `2` and `x` to `y` (they're aliases)
+  3. We assign the return value of `x + y` back to `x`, which causes `x` (the copy of the original reference) to be bound to a **new** object (point to a **new** object)
+  4. While the original references internally created in 1. cannot be changed, a copy of the reference is able to mutate the referenced object. In this case though, the referenced object is NOT mutated because the assignment in the method makes binds the **copy of the original reference** to a new variable.
+     - This has no effect on the **original reference.**
+  5. `x` (the copy of the original reference) is returned from the method, and then stored in `b`
+  6. **Note**: at the end of the method, the original reference still points to the same (unchanged) object. Thus the value of `a` stays the same.
+
+  
+
+- ```ruby
+  def uppercase(value)
+    value.upcase!
+  end
+  
+  name = 'William'
+  uppercase(name)
+  puts name               # WILLIAM
+  ```
+
+  1.  Internally, a reference to `name` is created.
+
+  2. A **copy** of that reference, represented by `value`,  is passed to the method.
+
+     - this binds the string represented by "william" to `value`. 
+
+  3.  `value` (the copied referenced) is used by `#upcase!` (which mutates its caller) to mutate the referenced object.
+
+  4. The method returns the modified (mutated) object.
+
+     - While nothing was done to the original reference created in 1, it and the local variable `name` (and the copy of the original reference within the method) all point to the mutated object
+
+  5. The `puts` method is invoked with the return value of `uppercase` (WILLIAM) as an argument, causing WILLIAM to be output, and returning `nil`
+
+     
+
+  
 
 ### Rock Paper Scissors Assignment
 
@@ -1046,32 +1167,6 @@ puts words.inspect        # => ["doo", "channel"]
     
 
 ## SMALL EXERCISES
-
-### Easy 1
-
-##### <u>Odd</u>
-
-- Remainder operators return negative results if the number on the left is negative, while modulo always returns a non-negative result if the  number on the right is positive
-
-  - `-5 mod 2 == 1` | `-5 rem 2 == -1`
-
-    
-
-##### <u>digit_list.rb</u>
-
-
-
-**<u>how-many.rb</u>**
-
-- 
-
-
-
-**<u>digit_list.rb</u>**
-
-
-
-
 
 
 
@@ -2378,66 +2473,933 @@ end
 
 -----------------------------------------------------------------------------
 
-### Quiz 2 Incorrect Answers (lesson 4) 
+### QUIZ - Lesson 4
 
-1. Read the below statements regarding `each` and identify all the statements which are correct. You may assume that the block doesn't terminate the method prematurely.
+1. What happens if we try to initialize a Hash that contains duplicate keys?
 
-   - A If you call `each` with a block on an array that contains seven elements, the block will always execute seven times.
+   Example:
+
+   ```ruby
+hsh = {a: 100, b: 200, c: 300, a: 400}
+   ```
+
+   **The value for the second occurrence of the duplicate key overwrites the value for the first occurrence.** **The hash is created and a warning is raised but the hash does not contain *all* of the key-value pairs; the first occurrence is overwritten by the second.**
+
+   
+
+   ------------------------------------
+
+   
+
+2. Identify all of the code implementations that correctly meet the following set of requirements.
+
+   > Given an array of strings representing integers, iterate through all  of the items in the array. If the integer value of the string is odd add it to a new array of odd integer strings. Once iteration is complete  the new array should contain all of the odd integer strings from the  original array.
+
+   - [ ] ```ruby
+     numbers = ['2', '3', '5', '7', '8', '11', '13', '15', '18']
+     odd_numbers = []
+     number = 0
+     
+     until number == numbers.size
+       odd_numbers << numbers[number] if number.to_i.odd?
+     
+       number += 1
+     end
+     ```
+
+     - A isn't correct b/c.. The issue here is using the counter `number` in the `if` condition. You could fix this bug by changing the line to:
+
+     - ```ruby
+       odd_numbers << numbers[number] if numbers[number].to_i.odd?
+       ```
+
+   - [x] ```ruby
+     numbers = ['2', '3', '5', '7', '8', '11', '13', '15', '18']
+     odd_numbers = []
+     
+     for number in numbers
+       if number.to_i.odd?
+         odd_numbers.push(number)
+       end
+     end
+     ```
+
+   - [x] ```ruby
+     numbers = ['2', '3', '5', '7', '8', '11', '13', '15', '18']
+     odd_numbers = []
+     counter = 0
+     
+     loop do
+       number = numbers[counter].to_i
+     
+       odd_numbers << numbers[counter] unless number.even?
+     
+       counter += 1
+       break if counter == numbers.size
+     end
+     ```
+
+   - [x] ```ruby
+     numbers = ['2', '3', '5', '7', '8', '11', '13', '15', '18']
+     odd_numbers = []
+     
+     numbers.each do |number|
+       odd_numbers << number if number.to_i.odd?
+     end
+     ```
+
+     
+
+     ---------------
+
+     
+
+3. Identify all of the code implementations that correctly meet the following set of requirements.
+
+   > Given an array of integers, for each integer output all integers from `1` to that integer; e.g. if the integer was `5`, you would output `1`, `2`, `3`, `4`, `5`.
+
+   - [x] ```ruby
+     numbers = [7, 3, 5, 2, 1, 8, 4]
+     counter = numbers.size
+     
+     loop do
+       number = numbers[-counter]
+       for num in 1..number
+         puts num
+       end
+     
+       break if counter == 1
+       counter -=1
+     end
+     ```
+
+   - [ ] ```ruby
+     numbers = [7, 3, 5, 2, 1, 8, 4]
+     counter = 0
+     
+     loop do
+       number = numbers[counter]
+       counter = 0
+     
+       loop do
+         counter += 1
+         puts counter
+     
+         break if counter >= number
+       end
+     
+       counter += 1
+       break if counter >= numbers.size
+     end
+     ```
+
+     - Incorrect: B. The issue here is that we've used the same variable name `counter` to track iteration for both the inner loop and the outer loop; because `counter` increments to `7` on the first iteration of the inner loop, the outer loop is only run once.
+
+   - [x] ```ruby
+     numbers = [7, 3, 5, 2, 1, 8, 4]
+     
+     for number in numbers
+       counter = 0
+     
+       loop do
+         counter += 1
+         puts counter
+     
+         break if counter >= number
+       end
+     end
+     ```
+
+   - [x] ```ruby
+     numbers = [7, 3, 5, 2, 1, 8, 4]
+     
+     numbers.each do |number|
+       counter = 0
+       number.times do
+         counter += 1
+         puts counter
+       end
+     end
+     ```
+
+     
+
+   ------------
+
+   
+
+4. This method takes a string in standard sentence case and *should* return it in snake case:
+
+   ```ruby
+   sentence = 'The sky was blue'
+   snake(sentence) # => 'the_sky_was_blue'
+   ```
+
+   but it contains an error.
+
+   Identify the line of code that is causing the error.
+
+   ```ruby
+   def snake(str)
+     words = str.split
+     current_word = 1
+   
+     loop do
+       words[current_word].downcase!
+   
+       current_word += 1
+       break if current_word >= words.size
+     end
+   
+     words.join('_')
+   end
+   ```
+
+   **Answer:**
+
+   ```
+   current_word = 1
+   ```
+
+   
+
+   -----------------
+
+   
+
+5. This method takes a string in standard sentence case and *should* return it in camel case:
+
+   ```ruby
+   sentence = 'The sky was blue'
+   camel(sentence) # => 'TheSkyWasBlue'
+   ```
+
+   but it contains an error.
+
+   Identify the line of code that is causing the error.
+
+   ```ruby
+   def camel(str)
+     words = str.split(' ')
+     counter = 0
+   
+     while counter > words.size
+       words[counter] = words[counter].capitalize
+   
+       counter = counter + 1
+     end
+   
+     words.join
+   end
+   ```
+
+   **Answer:**
+
+   ```ruby
+   while counter > words.size
+   ```
+
+   **B. The problem is the conditional in the `while` loop. This should use `<` for comparison instead of `>`. As it stands, the loop never gets executed because `counter` is assigned to `0` and so is never greater than `words.size`.**
+
+   
+
+   ----------------------
+
+   
+
+6. This method takes a string in standard sentence case and *should* return it in upper snake case:
+
+   ```ruby
+   sentence = 'The sky was blue'
+   upper_snake(sentence) # => 'THE_SKY_WAS_BLUE'
+   ```
+
+   but it contains an error.
+
+   Identify the line of code that you need to fix in order to make this code work properly.
+
+   ```ruby
+   def upper_snake(str)
+     words = str.split
+     current_word = 0
+   
+     loop do
+       current_word += 1
+       break if current_word == words.size
+   
+       words[current_word].upcase!
+     end
+   
+     words.join('_')
+   end
+   ```
+
+   **Answer:**
+
+   ```ruby
+   current_word += 1
+   ```
+
+   **The problem here is not the line itself but the *positioning* of the line. Because we increment our `current_word` counter *before* the line that calls `upcase!`, the first word in the string does not get upcased (or if there is only a single word we break out of the loop straight away). This can be fixed  by moving the line `current_word += 1` to the bottom of the loop.**
+
+   
+
+   -------------------
+
+   
+
+7. <u>Read the below statements regarding `each` and identify all the statements which are correct. You may assume that the block doesn't terminate the method prematurely.</u>
+
+   - A  If you call `each` with a block on an array that contains seven elements, the block will always execute seven times.
 
      - False because If you mutate the object used to call `each` from within your block, the block may run fewer than 7 times.
 
-   - B When `each` is called with a block on a hash, it returns an array.
+   - B  When `each` is called with a block on a hash, it returns an array.
 
      - False because  The `Hash#each` method returns the hash that it was called on.
 
-   - <u>**C When `each` is called with a block on an array, it returns the array object that it was called on.**</u>
+   - **C  When `each` is called with a block on an array, it returns the array object that it was called on.**
 
-   - D When called with a block, the `Array#each` method considers the truthiness of the block's return value.
+     - When called with a block, the `Array#each` method returns the array itself. Without a block a returns an Enumerator.
+
+   - D  When called with a block, the `Array#each` method considers the truthiness of the block's return value.
 
      - The `Array#each` method ignores the return value of the block.
 
        
 
-2. Read the below statements regarding `select` and identify all the statements which are correct.
+   ------------
 
-   - **<u>A - If `select` was called with a block that returned a falsey value on every iteration, `select` would return `nil**`</u>
+   
 
-     - Result would be an empty collection
+8. <u>*Read* the below statements regarding `select` and identify all the statements which are correct.</u>
 
-   - B - When `select` is called with a block, it evaluates the truthiness of the block's return value.
+   A  If `select` was called with a block that returned a falsey value on every iteration, `select` would return `nil`
 
-   - C - If `select` was called on an array with a block that returned a truthy value on each iteration, the original array would be returned.
+   - If the block's return value is evaluated as `false` on every iteration, the return value would be an empty collection of the type `select` was called on.
 
-     - The return value in this case would be a **new** array containing all of the *items* from the original array.
+   **B  When `select` is called with a block, it evaluates the truthiness of the block's return value.**
 
-   - <u>D -**When `select` is called with a block on a hash it returns a new hash..**</u>
+   C  If `select` was called on an array with a block that returned a truthy value on each iteration, the original array would be returned.
+
+   - The return value in this case would be a **new** array containing all of the *items* from the original array.
+
+   **D  When `select` is called with a block on a hash it returns a new hash.**
+
+   
+
+   ------------
+
+   
+
+9. <u>Read the below statements regarding `map` and identify all the statements which are correct. Assume that the block does not mutate the array.</u>
+
+   A  If `map` was called with a block that returned `nil` on every iteration, it would return an empty array.
+
+   - The return value in this situation would be an array containing `nil`s; one `nil` for each item in the original array.
+
+   **B  If `map` was called with a block on an array containing five items, the return value would be an array containing five items.**
+
+   **C  `Enumerable#map` and `Enumerable#collect` perform the same function.**
+
+   D  When `map` is called with a block on a hash it returns a new hash.
+
+   - <u>When `map` is called with a block on a hash, the return value of the method is an array.</u>
 
      
 
-3. ```ruby
-   flavors = ['chocolate', 'strawberry', 'mint', 'vanilla']
-   flavors.reject { |flavor| puts flavor }
-   ```
+   --------------------
 
-Based on your observations of the code example, select all statements below which are true.
+   
 
-- A The method called on the `flavors` array will return an empty array.
-- B The method called on the `flavors` array ignores the return value of the block. 
-- C The method called on the `flavors` array returns a reference to the original array. 
+10. Identify all the code samples which **are** examples of selection.
+
+    - [ ] ```ruby
+      arr = [1, 2, 3, 4, 5]
+      counter = 0
+      
+      new_arr = []
+      
+      loop do
+        num = arr[counter]
+        if num >= 3
+          new_arr << 0
+        else
+          new_arr << num * 2
+        end
+      
+        counter += 1
+        break if counter == arr.size
+      end
+      ```
+
+      - This is <u>transformation rather than selection</u>; `new_arr` contains the same number of elements as `arr` but some of the values have been multiplied by `2`.
+
+    - [x] ```ruby
+      hsh = {a: 'apple', b: 'pear', c: 'orange', d: 'kiwi', e: 'banana'}
+      counter = 0
+      
+      new_hsh = {}
+      
+      for letter, fruit in hsh
+        new_hsh[letter] = fruit if fruit.size > 4
+      end
+      ```
+
+      - In both of these examples, the new collection contains a <u>sub-section of the original collection.</u>
+
+    - [x] ```ruby
+      def some_method(words)
+        arr = []
+        counter = 0
+      
+        loop do
+          word = words[counter]
+          arr << word if word.size < 4
+      
+          counter += 1
+          break if counter == words.size
+        end
+      
+        arr
+      end
+      
+      poem = %w(April is the cruelest month)
+      some_method(poem)
+      ```
+
+      - In both of these examples, the new collection contains a sub-section of the original collection.
+
+    - [ ] ```ruby
+      num_arr = [2, 4, 7, 8, 11, 15]
+      counter = 0
+      
+      until counter == num_arr.size
+        puts num_arr[counter] + 1
+      
+        counter += 1
+      end
+      ```
+
+      - This is neither selection nor transformation, just iteration through `num_arr` with a value being output for each element in the array.
+
+        
+
+        ------------------------------
+
+        
+
+11. Identify all the code samples which are **not** examples of transformation.
+
+    - [ ] ```ruby
+      def star_method(stars)
+        arr = []
+        stars.each do |star|
+          arr.push(star.upcase)
+        end
+        arr
+      end
+      
+      stars_1 = ['Sirius', 'Rigel', 'Vega', 'Polaris', 'Altair']
+      stars_2 = star_method(stars_1)
+      ```
+
+      - These *are* transformation. In both cases `stars_2` contain altered versions of the strings in `stars_1`.
+
+    - [x] ```ruby
+      def star_method(stars)
+        arr = []
+        counter = 0
+      
+        until counter == stars.size
+          star = stars[counter]
+          arr << star if star.size > 4
+      
+          counter += 1
+        end
+        arr
+      end
+      
+      stars_1 = ['Sirius', 'Rigel', 'Vega', 'Polaris', 'Altair']
+      stars_2 = star_method(stars_1)
+      ```
+
+      - This is selection, rather than transformation; `stars_2` contains a sub-set of the elements in `stars_1`.
+
+    - [x] ```ruby
+      def star_method(stars)
+        for star in stars
+          star.downcase
+        end
+      end
+      
+      stars_1 = ['Sirius', 'Rigel', 'Vega', 'Polaris', 'Altair']
+      stars_2 = star_method(stars_1)
+      ```
+
+      - This is <u>neither selection nor transformation</u>. Although we call `downcase` on each element in `stars`, the way that the method is implemented means that <u>nothing in our `stars_1` or `stars_2` arrays is selected or transformed</u>. As with `each`, the return value of a `for` loop in Ruby (and therefore of our method) is simply the object it was called on, in this case the `stars_1` array that we passed to the method.
+      - To transform both arrays, you would have to use `star.downcase!`
+
+    - [ ] ```ruby
+      def star_method(stars)
+        arr = []
+        counter = 0
+      
+        until counter == stars.size do
+          arr << stars[counter][0, 3]
+      
+          counter += 1
+        end
+        arr
+      end
+      
+      stars_1 = ['Sirius', 'Rigel', 'Vega', 'Polaris', 'Altair']
+      stars_2 = star_method(stars_1)
+      ```
+
+      - These *are* transformation. In both cases `stars_2` contain altered versions of the strings in `stars_1`.
+
+        
+
+    ---------------
+
+    
+
+12. Within the code below, identify the method represented by `some_method`:
+
+    ```ruby
+    ['a', 'b', 'c'].some_method do |item|
+      puts item
+    end
+    # => []
+    ```
+
+    A  `each`
+
+    - `each` would return the original array.
+
+    **B  `select`**
+
+    - **`puts item` returns `nil` which is evaluated as falsey, therefore using `select` would return an empty array.**
+
+    C   `map`
+
+    - `map` would return an array of `nil`s `[nil, nil, nil]`.
+
+    D  `None of the Above`
+
+    
+
+    -------------------------
+
+    
+
+13. Within the code below, identify the method represented by `some_method`:
+
+    ```ruby
+    [1, 2, 3, 4, 5].some_method do |num|
+      num + 1
+    end
+    # => []
+    ```
+
+    A  `each`
+
+    - `each` would return the original array.
+
+    B  `select`
+
+    - `select` would return a new array containing all the items from the original array `[1, 2, 3, 4, 5]`.
+
+    C   `map`
+
+    - `map` would return an array with each integer incremented by 1 `[2, 3, 4, 5, 6]`.
+
+    **D  `None of the Above`**
+
+    - **None of `each`, `select` or `map` would return an empty array with the given block. If `reject` was used here then an empty array would be returned.**
+
+      
+
+    ---------
+
+    
+
+14. Within the code below, identify the method represented by `some_method`:
+
+    ```ruby
+    ['green', 'blue', 'red'].some_method do |word|
+      puts word
+      word.upcase
+    end
+    # => ['GREEN', 'BLUE', 'RED']
+    ```
+
+    A  `each`
+
+    - `each` would return the original array.
+
+    B  `select`
+
+    - `select` would return a new array, containing all of the (lowercased) strings from the original array.
+
+    **C   `map`**
+
+    - **`map` returns a new array, with each element determined by  the return value of the block, in this case an upper case version of  each string from the original array.**
+
+    D  `None of the Above`
+
+    
+
+    ----------------
+
+    
+
+15. Within the code below, identify the method represented by `some_method`:
+
+    ```ruby
+    {a: 1, b: 2, c: 3, d: 4, e: 5}.some_method do |_, num|
+      plus_one = num + 1
+      puts "#{num} plus 1 is #{plus_one}"
+    end
+    # => {:a => 1, :b => 2, :c => 3, :d => 4, :e => 5}
+    ```
+
+    **A  `each`**
+
+    - **The `Hash#each` method returns the calling object, i.e. the hash that `each` was called on.**
+
+    B  `select`
+
+    - `select` would return an empty hash, since the call to `puts` returns `nil` and this is the last expression evaluated in the block.
+
+    C   `map`
+
+    - `map` would return an array of `nil`s; as with **B**, `puts` is the last expression evaluated in the block, and `map` returns an array.
+
+    D  `None of the Above`
+
+    
+
+    ------------------------
+
+    
+
+16. Carefully examine the following code example.
+
+    ```ruby
+    pets = ['cat', 'parrot', 'dog', 'fish']
+    pets.map do |pet|
+      pet.size == 3
+    end
+    ```
+
+    Based on your observations of the code example, select all statements below which are true.
+
+    
+
+    - [x] **A  The method called on the `pets` array considers the return value of the block.**
+
+      - **The return value of the block, which will be `true` or `false`, *is* considered and in fact is used to populate a *new* array that is returned by the call to `map`.**
+
+      - ```ruby
+        [true, false, true, false]
+        ```
+
+    - [ ] B  The method called on the `pets` array will return the original array.
+    - [ ] Calling`Array#map` with a block returns a *new* `Array`.
+
+    - [x] **C  The method called on the `pets` array will return a new array.**
+
+      - **The return value of the block, which will be `true` or `false`, *is* considered and in fact is used to populate a *new* array that is returned by the call to `map`.**
+
+      - ```ruby
+        [true, false, true, false]
+        ```
+
+    - [ ] D  The method called on the `pets` array will return only the items from the array which meet the criteria set in the block.
+
+      -  This would be a <u>description of *selection*</u> but `map` performs *transformation*, in this case replacing each array item with a boolean.
+
+        
+
+      ---------
+
+      
+
+17. ```ruby
+    flavors = ['chocolate', 'strawberry', 'mint', 'vanilla']
+    flavors.reject { |flavor| puts flavor }
+    ```
+
+
+*Based* on your observations of the code example, select all statements below which are true.
+
+- [ ] A The method called on the `flavors` array will return an empty array.
+
+- [ ] B The method called on the `flavors` array ignores the return value of the block. 
+
+- [ ] C The method called on the `flavors` array returns a reference to the original array. 
   - The array returned by `reject` it is a *new* array however, and not the original `flavors` array.
-- **<u>D The method called on the `flavors` array considers only the truthiness of the block's return value.</u>**
+
+- [x] **D The method called on the `flavors` array considers only the truthiness of the block's return value.**
+  - **Like `Array#select`, `Array#reject` is only interested in the *truthiness* of the block's return value, though in the case of `reject` it returns the items for which the block is *not* `true`, or in other words is *falsy*.**
 
 <u>I selected C & D but C is wrong.</u>
 
-`Array#reject` *does* consider the return value of the block; since in this case the return value will be `nil` in each case, this will always be evaluated as *falsy* and so the array that is returned contains all of the flavor strings. The array returned by `reject` it is a *new* array however, and not the original `flavors` array.
+**A**, **B**, & **C**. ```Array#reject` *does* consider the return value of the block; since in this case the return value will be `nil` in each case, this will always be evaluated as *falsy* and so the array that is returned contains all of the flavor strings. The array returned by `reject` it is a *new* array however, and not the original `flavors` array.
 
 
+
+---------
+
+
+
+18.  Identify all of the code implementations that correctly meet the following set of requirements.
+
+    > Given an array `numbers` which contains both odd and even integers; create two new arrays, `odd_numbers` which contains the odd integers from the original array and `even_numbers` which contains the even integers.
+
+    - [x] ```ruby
+      numbers = [1, 2, 4, 5, 7, 8, 10, 13, 14]
+      
+      odd_numbers = numbers.select do |number|
+                      number.odd?
+                    end
+      
+      even_numbers = numbers.select do |number|
+                      number.even?
+                    end
+      ```
+
+    - [x] ```ruby
+      numbers = [1, 2, 4, 5, 7, 8, 10, 13, 14]
+      odd_numbers = []
+      even_numbers = []
+      
+      numbers.each do |number|
+        if number.even?
+          even_numbers << number
+        elsif number.odd?
+          odd_numbers << number
+        end
+      end
+      ```
+
+    - [x] ```ruby
+      numbers = [1, 2, 4, 5, 7, 8, 10, 13, 14]
+      odd_numbers = []
+      even_numbers = []
+      
+      for number in numbers
+        next if number.odd?
+        even_numbers << number
+      end
+      
+      for number in numbers
+        next unless number.odd?
+        odd_numbers << number
+      end
+      ```
+
+    - [ ] ```ruby
+      numbers = [1, 2, 4, 5, 7, 8, 10, 13, 14]
+      odd_numbers, even_numbers = numbers.partition do |number|
+                                    number.even?
+                                  end
+      ```
+
+      - This gets the two new arrays the wrong way around in the parallel assignment. This is because `Enumerable#partition` returns an array containing two sub-arrays, <u>the *first* of which contains the elements for which the block evaluates to `true`.</u> Since the condition in this case evaluates whether each number is even, we should assign `even_numbers` to the first sub-array and `odd_numbers` to the second.
+
+        
+
+    -----------
+
+    
+
+19. Identify all of the code implementations that correctly meet the following set of requirements.
+
+    > Given the following hash which contains keys representing countries  and values representing the capital cities of those countries, return a  new hash containing only the key-value pairs where the country begins  with the letter 'B'.
+
+    ```ruby
+    countries_and_capitals = {
+      'France' => 'Paris',
+      'Belgium' => 'Brussels',
+      'Morocco' => 'Rabat',
+      'Barbados' => 'Bridgetown',
+      'Peru' => 'Lima',
+      'Bolivia' => 'La Paz',
+      'Brazil' => 'Brasilia'
+    }
+    ```
+
+    
+
+    - [ ] ```ruby
+      countries_and_capitals.select { |_, country| country[0] == 'B' }
+      ```
+
+      - Although our second block parameter is called `country` it is actually referring to the hash *value* in each iteration, which in this case are the capitals.
+
+    - [x] ```ruby
+      countries_and_capitals.each_with_object({}) do |(k, v), obj|
+        obj[k] = v if k.chr == 'B'
+      end
+      ```
+
+    - [x] ```ruby
+      def select_countries(hsh)
+        sub_set = {}
+        hsh.each_key do |country|
+          if country[0] == 'B'
+            sub_set[country] = hsh[country]
+          end
+        end
+        sub_set
+      end
+      
+      select_countries(countries_and_capitals)
+      ```
+
+    - [ ] ```ruby
+      def begins_with_b(string)
+        string[0] == 'B'
+      end
+      
+      countries_and_capitals.find_all do |country, capital|
+        begins_with_b(country)
+      end
+      ```
+
+      - This code returns a <u>nested array rather than a hash</u>; though if we refactored our code slightly to call `to_h` on this return value then the code would fulfill the requirements.
+
+        
+
+      -------------
+
+      
+
+20. Your team is asked to refactor some legacy code used by the marketing team. One of the requirements of the project is to change the  implementation from using basic looping structures to using iterative  methods instead.
+
+    Sample data:
+
+    ```ruby
+    mailing_campaign_leads = [
+      {name: 'Emma Lopez', email: 'emma.lopez@some_mail.com', days_since_login: 423, mailing_list: true},
+      {name: 'mike richards', email: 'michael.richards@some_mail.com', days_since_login: 23, mailing_list: false},
+      {name: 'JANE WILLIAMS', email: 'jane_w95@my_mail.com', days_since_login: 16, mailing_list: true},
+      {name: 'Ash Patel', email: 'ash_patel@my_mail.com', days_since_login: 22, mailing_list: true}
+    ]
+    ```
+
+    ```ruby
+    counter = 0
+    
+    loop do
+      break if counter == mailing_campaign_leads.size
+      full_name = mailing_campaign_leads[counter][:name]
+      names = full_name.split
+    
+      names_counter = 0
+      loop do
+        break if names_counter == names.size
+        name = names[names_counter]
+        names[names_counter] = name.capitalize
+    
+        names_counter += 1
+      end
+    
+      capitalized_full_name = names.join(' ')
+      mailing_campaign_leads[counter][:name] = capitalized_full_name
+    
+      counter += 1
+    end
+    
+    usable_leads = []
+    counter = 0
+    
+    loop do
+      break if counter == mailing_campaign_leads.size
+      last_login = mailing_campaign_leads[counter][:days_since_login]
+      subscribed_to_list = mailing_campaign_leads[counter][:mailing_list]
+    
+      if last_login < 60 && subscribed_to_list
+        usable_leads << mailing_campaign_leads[counter]
+      end
+    
+      counter += 1
+    end
+    ```
+
+    The team comes up with four options to replace the legacy  code, which you then discuss during a code review. Select all the  options which replicate the functionality of the legacy code.
+
+​	
+
+- [ ] ```ruby
+  mailing_campaign_leads.map do |lead|
+    lead[:name].capitalize!
+  end
+  
+  mailing_campaign_leads.select! do |lead|
+    lead[:days_since_login] < 60 && lead[:mailing_list]
+  end
+  ```
+
+  - This only capitalizes the first name in the name string. You might also note that this is not really an appropriate use of `map`, and `each` would be a better choice here.
+
+- [ ] ```ruby
+  mailing_campaign_leads.each do |lead|
+    names = lead[:name].split
+    names.map! { |name| name.capitalize }
+    lead[:name] = names.join(' ')
+  end
+  
+  usable_leads = mailing_campaign_leads.keep_if do |lead|
+    lead[:days_since_login] <= 60 && lead[:mailing_list]
+  end
+  ```
+
+  - This performs an incorrect comparison in the conditional, using `<=` instead of `<`; although this error isn't surfaced by the test data it could have an impact in production.
+
+- [ ] ```ruby
+  mailing_campaign_leads.each do |lead|
+    names = lead[:name].split
+    lead[:name] = names.map { |name| name.capitalize }.join(' ')
+  end
+  
+  usable_leads = mailing_campaign_leads.reject do |lead|
+    last_login = lead[:days_since_login]
+    subscribed_to_list = lead[:mailing_list]
+    last_login > 59 && !subscribed_to_list
+  end
+  ```
+
+  - When evaluating our `usable_leads`, we want to check that the customer's last login was less than 60 days ago and also that they are  subscribed to our mailing list. Because this solution uses `reject` rather than `select` it is only eliminating leads where neither of those things are true rather than just one of them. This could be fixed by using `||` instead of `&&` in the conditional.
+
+- [x] ```ruby
+  mailing_campaign_leads.each do |lead|
+    names = lead[:name].split
+    names.map! { |name| name.capitalize }
+    lead[:name] = names.join(' ')
+  end
+  
+  usable_leads = mailing_campaign_leads.select do |lead|
+    lead[:days_since_login] < 60 && lead[:mailing_list]
+  end
+  ```
+
+
+
+---------------
 
 
 
 ## <u>Lesson 5: Advanced Ruby Collections</u>
 
 ### <u>Sorting</u>
+
+##### What is sorting?
+
+- Sorting is setting the order of the items in a collection according to a certain criterion.
 
 ```ruby
 [2, 5, 3, 4, 1].sort # => [1, 2, 3, 4 ,5]
@@ -2468,7 +3430,7 @@ Based on your observations of the code example, select all statements below whic
 
 <u>Sort</u> <u>Method</u>
 
-- We can also call `sort` with a block; this gives us more  control over how the items are sorted. The block needs two arguments  passed to it (the two items to be compared) and the return value of the  block has to be `-1`, `0`, `1` or `nil`.
+- We can also call `sort` with a block; this gives us more  control over how the items are sorted. The block needs **two arguments**  passed to it (the two items to be compared) and the **return value of the  block** has to be `-1`, `0`, `1` or `nil`.
 
 - ```ruby
   [2, 5, 3, 4, 1].sort do |a, b|
@@ -2488,6 +3450,8 @@ Based on your observations of the code example, select all statements below whic
 
 #### The `sort_by` method
 
+- `sort_by` is similar to `sort` but is usually called with a block. The code in the block determines how the items are compared.
+
 - ```ruby
   ['cot', 'bed', 'mat'].sort_by do |word|
     word[1]
@@ -2495,6 +3459,12 @@ Based on your observations of the code example, select all statements below whic
   # => ["mat", "bed", "cot"]
   
   ```
+
+  - Here we are sorting using the character at index `1` of each string, so only the characters `'a'`, `'e'` and `'o'` are compared and the strings ordered according to the comparison of  those characters. The other characters in the strings are ignored  entirely.
+  
+- When calling `sort_by` on a hash, two arguments need to be passed to the block - the key and the value.
+
+- **The last argument evaluated in the block should be the thing by which we want to sort**
 
 - ```ruby
   people = { Kate: 27, john: 25, Mike:  18 }
@@ -2516,11 +3486,29 @@ Based on your observations of the code example, select all statements below whic
     # => [[:john, 25], [:Kate, 27], [:Mike, 18]]
     ```
 
-- `sort_by` always returns an array, even when called on a  hash, so the result here is a new array with the key-value pairs as  objects in nested arrays. If we need to convert this back into a hash we can call `Array#to_h` on it.
+- **`sort_by` always returns an array, even when called on a hash**, so the result here is a new array with the key-value pairs as  objects in nested arrays. If we need to convert this back into a hash we can call `Array#to_h` on it.
 
-- > Note: `Array#sort` and `Array#sort_by` have a equivalent destructive methods `Array#sort!` and `Array#sort_by!`. With these methods, rather then returning a new collection, the same  collection is returned but sorted. These methods are specific to arrays  and are not available to hashes
+  > Note: `Array#sort` and `Array#sort_by` have a equivalent destructive methods `Array#sort!` and `Array#sort_by!`. With these methods, rather then returning a new collection, the same  collection is returned but sorted. These methods are specific to arrays  and are not available to hashes
+
+### Summary
+
+- Comparison is at the heart of sorting. When sorting collections, you  need to know if the objects you want to sort on implement a `<=>` method and how that method is defined.
+- Methods other than `sort` and `sort_by` also use comparison as the basis for how they work.
+  - `min` `max` `minmax` `min_by` `max_by` `minmax_by`
+
+
 
 #  Nested Data Structures
+
+#### Referencing collection elements
+
+- Each inner array still has its own index even though they're both inside of an array.
+
+```ruby
+arr = [[1, 3], [2]]
+arr[0] # => [1, 3]
+arr[0][1] # => 3
+```
 
 #### Updating collection elements
 
@@ -2530,7 +3518,7 @@ Based on your observations of the code example, select all statements below whic
   arr                     # => [[1, 3], "hi there"]
   ```
 
-  - The `arr[1] = "hi there"` is a destructive action that permanently changed the second element in the `arr` array; it replaced the entire `[2]` inner array with the string `"hi there"`.
+  - The `arr[1] = "hi there"` is a **destructive action** that permanently changed the second element in the `arr` array; it replaced the entire `[2]` inner array with the string `"hi there"`.
 
 <u>Insert an additional element into an inner array</u>
 
@@ -2552,13 +3540,38 @@ Based on your observations of the code example, select all statements below whic
   arr # => [{ :a => "ant", :c => "cat" }, { :b => "bear" }]
   ```
 
-- As we know, arrays can contain any type of Ruby object. This means that  arrays can hold multiple different objects at the same time, including  nested data structures
+- As we know, arrays can contain any type of Ruby object. This means that arrays can hold multiple different objects at the same time, including  nested data structures
 
 #### Variable reference for nested collections
 
+```ruby
+a = [1, 3]
+b = [2]
+arr = [a, b]
+arr # => [[1, 3], [2]]
+```
+
+- The local variables `a` and `b` are pointing to `Array` objects. When we place the local variables as elements in an array, it looks like the same as adding the actual `Array` objects that they're pointing to into the array. And that's true to a  certain extent, but there are some edge cases we need to think about.
+
+- More importantly, we need to establish a working mental model of how the addition of variable reference affects the data in our nested collections.
+
+- <u>For example, what happens if we modify `a` after placing it in `arr`?</u>
+
+  ```ruby
+  a = [1, 3]
+  b = [2]
+  arr = [a, b]
+  arr # => [[1, 3], [2]]
+  
+  a[1] = 5
+  arr # => [[1, 5], [2]]
+  ```
+
+  - **The value of `arr` changed because `a` still points to the *same `Array` object* that's in `arr`. When we modified it by replacing `3` with `5`, we were modifying the `Array` object.**
+
 ![](/home/patrick/Desktop/variables-pointing-to-objects.png)
 
-- What if we modify the first array in `arr`? Is it different than modifying `a` directly?
+- <u>What if we modify the first array in `arr`? Is it different than modifying `a` directly?</u>
 
 - ```ruby
   arr[0][1] = 8
@@ -2566,19 +3579,57 @@ Based on your observations of the code example, select all statements below whic
   a   # => [1, 8]
   ```
 
-  - It produces the same result as modifying `a` directly. Why is that? **In both cases, we're modifying the *object* that `a` and `arr[0]` point to; we now have two ways to reference the *same object***. 
-  - In the first example, the object is being modified through `a`. 
+  - **It produces the same result as modifying `a` directly.** Why is that?
+  -  **In both cases, we're modifying the *object* that `a` and `arr[0]` point to; we now have two ways to reference the *same object***. 
+    - In the first example, the object is being modified through `a`. 
     - In the second example, the object is being modified through `arr[0]`.
   
 - ### <u>Remember that **variables are pointers to physical space in memory**</u>
 
-#### Shallow Copy
+  
+
+### Shallow Copy
 
 - Ruby provides two methods that let us copy an object, including collections: `dup` and `clone`. Both of these methods create a *shallow copy* of an object.
   - This means that only the **object that the method is called on is copied**. 
-  - <u>If the object contains other objects - like a nested  array</u> - then those **objects will be *shared*, not copied**. This has major impact to nested collections.
+  - <u>If the object contains **other objects** - like a nested array</u> - then those **objects will be *shared* (between the two collections), NOT copied**. This has major impact to nested collections.
+
+- `dup` allows **<u>objects within the copied</u>** object to be <u>modified</u>.
+
+  - ```RUBY
+    arr1 = ["a", "b", "c"]
+    arr2 = arr1.dup
+    arr2[1].upcase!
+    
+    arr2 # => ["a", "B", "c"]
+    arr1 # => ["a", "B", "c"]
+    
+    ```
+
+- `clone` works the same way.
+
+  - ```ruby
+    arr1 = ["abc", "def"]
+    arr2 = arr1.clone
+    arr2[0].reverse!
+    
+    arr2 # => ["cba", "def"]
+    arr1 # => ["cba", "def"]
+    ```
+
+-  You may have noticed that in both of the above examples <u>*both* `arr1` and `arr2` are changed.</u>
+
+  - It's important to understand that the reason this happens is because **the destructive methods** (`String#upcase!` and `String#reverse!`) **were called on the <u>object *WITHIN* the array</u>** **rather than the array itself.**
+
+  - Since, as we've already covered, **<u>those objects are *shared* (between the two arrays)</u>**, even if you mutate that object by referencing it from within a particular array or other collection, **<u>it is the OBJECT you are affecting RATHER than the collection.</u>**
+
+    
+
+  Consider the following examples:
 
 - ```ruby
+  # Example 1
+  
   arr1 = ["a", "b", "c"]
   arr2 = arr1.dup
   arr2.map! do |char|
@@ -2586,12 +3637,15 @@ Based on your observations of the code example, select all statements below whic
   end
   
   arr1 # => ["a", "b", "c"]
-  arr2 # => ["A", "B", "C"]
+arr2 # => ["A", "B", "C"]
   ```
 
-  - In the first example `arr2` is changed but `arr1` is not. Here, we call the destructive method `Array#map!` on `arr2`; <u>this method modifies the array</u>, replacing each element of `arr2` with a new value. Since we are **changing the Array, not the elements within it**, `arr1` is left unchanged.
-
+  - In the first example <u>`arr2` is changed but `arr1` is not</u>. Here, we call the destructive method `Array#map!` on `arr2`; <u>this method modifies the array</u>, replacing each element of `arr2` with a new value. Since we are <u>**changing the Array, not the elements (objects) within it**, **`arr1` is left unchanged.**</u>
+    - `map!` will modify the Array `arr2` and `arr2` only, the shared objects aren't modified.
+  
 - ```ruby
+  # Example 2
+  
   arr1 = ["a", "b", "c"]
   arr2 = arr1.dup
   arr2.each do |char|
@@ -2599,26 +3653,60 @@ Based on your observations of the code example, select all statements below whic
   end
   
   arr1 # => ["A", "B", "C"]
-  arr2 # => ["A", "B", "C"]
+arr2 # => ["A", "B", "C"]
   ```
+  
+  - In the second example, <u>both `arr1` and `arr2` are changed.</u> Here, we call the <u>destructive `String#upcase!`</u> method on **each *element* of `arr2`.** However, every **<u>element of `arr2`</u>** is a **<u>reference to the object referenced by the corresponding element in `arr1`</u>**. 
+  
+    - Thus, when `#upcase!` mutates the element in `arr2`, `arr1` is also affected; we **change the Array elements (the shared objects)**, **not the Array itself**.
+  
+    - `char.upcase!` will ONLY modify the objects shared between `arr1` and `arr2`, which is why they're both modified. 
+  
+      
 
-  - In the second example, both `arr1` and `arr2` are changed. Here, we call the destructive `String#upcase!` method on each *element* of `arr2`. 
-  - However, every <u>element of `arr2`</u> is a <u>reference to the object referenced by the corresponding element in `arr1`</u>. Thus, when `#upcase!` mutates the element in `arr2`, `arr1` is also affected; we **change the Array elements**, **not the Array**.
+### Freezing Objects
 
-#### Freezing Objects
+- The <u>main difference</u> between `dup` and `clone` is that **`clone` PRESERVES THE FROZEN STATE OF THE OBJECT**   ( CP - clone preserves - acronym for... you know... )
 
-- Main difference between `dup` and `clone` ----- **`clone` preserves the frozen state of the object**
+  - ```ruby
+    arr1 = ["a", "b", "c"].freeze
+    arr2 = arr1.clone
+    arr2 << "d"
+    # => RuntimeError: can't modify frozen Array
+    ```
 
-- ```ruby
-  arr1 = ["a", "b", "c"].freeze
-  arr2 = arr1.clone
-  arr2 << "d"
-  # => RuntimeError: can't modify frozen Array
-  ```
+- `dup` does **NOT** preserve the frozen state of the object
 
-- Only mutable objects can be frozen because immutable objects, like integers, are already frozen
+  - ```ruby
+    arr1 = ["a", "b", "c"].freeze
+    arr2 = arr1.dup
+    arr2 << "d"
+    
+    arr2 # => ["a", "b", "c", "d"]
+    arr1 # => ["a", "b", "c"]
+    ```
 
-- > What does `freeze` actually freeze? `freeze` only freezes the object it's called on. If the object it's called on contains other objects, those objects won't be frozen
+    - With `dup` we don't get an error because the frozen state of the object isn't preserved - the object can be modified.
+
+- What is **freezing**? In Ruby, objects can be frozen in order to **prevent them from being modified.**
+
+  - ```ruby
+    str = "abc".freeze
+    str << "d"
+    # => RuntimeError: can't modify frozen String
+    ```
+
+- **<u>Only mutable objects can be frozen</u> because immutable objects, like integers, are already frozen.**
+
+  - We can check if an object is frozen with the `frozen?` method:
+
+    ```ruby
+    5.frozen? # => true
+    ```
+
+  
+
+- > What does `freeze` actually freeze? `freeze` **ONLY** freezes the object it's called on. If the object it's called on **CONTAINS OTHER OBJECTS**, those objects **WON'T BE FROZEN**.
   >
   > - For example, if we have a nested array the nested objects can still be modified after calling `freeze`.
   >
@@ -2626,23 +3714,79 @@ Based on your observations of the code example, select all statements below whic
   >   arr = [[1], [2], [3]].freeze
   >   arr[2] << 4
   >   arr # => [[1], [2], [3, 4]]
+  >   
+  >   arr << 4
+  >   # can't modify frozen Array: [[1], [2], [3, 4]] (FrozenError)
   >   ```
+  
+  
 
-#### Deep Copy
+### Deep Copy
 
-- In Ruby, there's no built-in or easy way to create a deep copy or deep freeze objects within objects
+- <u>Deep Copy</u> = deep freeze **objects within objects**
+- In Ruby, there's no built-in or easy way to create a deep copy
 - It is important therefore to really be aware of how exactly `freeze`, `dup`, and `clone` work and the side effects they have.
   - When working with collections, especially nested collections, one of the key things to be aware of is the level within the collection at which  you are working
+
+
 
 #  Working with Blocks
 
 <u>Evaluating Code:</u>
 
--   What is the type of action being performed (method call, block, conditional, etc..)?
--   What is the object that action is being performed on?
--   What is the side-effect of that action (e.g. output or destructive action)?
--   What is the return value of that action?
--   Is the return value used by whatever instigated the action?****
+- What is the type of action being performed (method call, block, conditional, etc..)?
+
+- What is the **object that action is being performed on**?
+
+- What is the **side-effect** of that action (e.g. output or destructive action)?
+
+- What is the return value of that action?
+
+- Is the return value used by whatever instigated the action?
+
+  
+
+#### Example 1
+
+```ruby
+[[1, 2], [3, 4]].each do |arr|
+  puts arr.first
+end
+# 1
+# 3
+# => [[1, 2], [3, 4]]
+```
+
+- The `Array#each` method is being called on the multi-dimensional array `[[1, 2], [3, 4]]`. Each inner array is passed to the block in turn and assigned to the local variable `arr`. The `Array#first` method is called on `arr` and returns the object at index `0` of the current array - in this case the integers `1` and `3`, respectively. The `puts` method then outputs a string representation of the integer. `puts` returns `nil` and, since this is the last evaluated statement within the block, the return value of the block is therefore `nil`. `each` doesn't do anything with this returned value though, and since the return value of `each` is the calling object - in this case the nested array `[[1, 2], [3, 4]]` - this is what is ultimately returned.
+
+- | Line | Action                | Object                                   | Side Effect                                 | Return Value                             | Is Return Value Used?                        |
+  | :--: | --------------------- | ---------------------------------------- | ------------------------------------------- | ---------------------------------------- | -------------------------------------------- |
+  |  1   | method call (`each`)  | The outer array                          | None                                        | The calling object `[[1, 2], [3, 4]]`    | No, but shown on line 6                      |
+  | 1-3  | block execution       | Each sub-array                           | None                                        | `nil`                                    | No                                           |
+  |  2   | method call (`first`) | Each sub-array                           | None                                        | Element (object) at index 0 of sub-array | Yes, used by `puts`                          |
+  |  2   | method call (`puts`)  | Element (object) at index 0 of sub-array | Outputs string representation of an Integer | `nil`                                    | Yes, used to determine return value of block |
+
+
+
+#### Example 2
+
+```ruby
+[[1, 2], [3, 4]].map do |arr|
+  puts arr.first
+end
+# 1
+# 3
+# => [nil, nil]
+```
+
+| Line | Action                | Object                               | Side Effect                                   | Return Value                    | Is Return Value Used?                        |
+| :--: | --------------------- | ------------------------------------ | --------------------------------------------- | ------------------------------- | -------------------------------------------- |
+|  1   | method call (`map`)   | The outer array                      | None                                          | New array `[nil, nil]`          | No, but shown on line 6                      |
+| 1-3  | block execution       | Each sub-array                       | None                                          | `nil`                           | Yes, used by `map` for transformation        |
+|  2   | method call (`first`) | Each sub-array                       | None                                          | Element at index 0 of sub-array | Yes, used by `puts`                          |
+|  2   | method call (`puts`)  | Element at index 0 of each sub-array | Outputs a string representation of an Integer | `nil`                           | Yes, used to determine return value of block |
+
+
 
 #### Example 3
 
@@ -2651,6 +3795,10 @@ Based on your observations of the code example, select all statements below whic
   puts arr.first
   arr.first
 end
+
+# 1
+# 3
+# => [1, 3]
 ```
 
 | Line | Action                | Object                               | Side Effect                                   | Return Value                    | Is Return Value Used?                        |
@@ -2675,20 +3823,25 @@ my_arr = [[18, 7], [3, 12]].each do |arr|
     end
   end
 end
+
+# 18
+# 7
+# 12
+# => [[18, 7], [3, 12]]
 ```
 
 | Line | <u>Action</u>         | <u>Object</u> (object that action is being performed on) | <u>Side Effect</u> (output or destructive action) | <u>Return Value</u> (of that action)                         | <u>Is Return Value Used</u>? (by whatever instigated the action) |
 | :--- | --------------------- | -------------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | 1    | variable assignment   | n/a                                                      | None                                              | `[[18, 7], [3, 12]]`                                         | No                                                           |
 | 1    | method call (`each`)  | the outer array (`[[18, 7], [3, 12]]`)                   | None                                              | `[[18, 7], [3, 12]]` (the calling object)                    | Yes, used by variable assignment to `my_arr`                 |
-| 1-7  | outer block execution | each sub-array                                           | None                                              | Each sub-array                                               | No                                                           |
+| 1-7  | outer block execution | each sub-array                                           | None                                              | Each sub-array                                               | No (`each` doesn't use the return value)                     |
 | 2    | method call (`each`)  | each sub-array                                           | None                                              | The calling object, which is the sub-array in the current iteration | Yes, used to determine the return value of the outer block   |
-| 2-6  | inner block execution | Element of the sub-array in that iteration               | None                                              | `nil`                                                        | No                                                           |
+| 2-6  | inner block execution | Element of the sub-array in that iteration               | None                                              | `nil`                                                        | **No** (`each` doesn't use the return value)                 |
 | 3    | comparison (`>`)      | Element of the sub-array in that iteration               | None                                              | Boolean                                                      | Yes, evaluated by `if`                                       |
 | 3-5  | conditional (`if`)    | Element of the sub-array in the current iteration        | None                                              | `nil`                                                        | Yes, used to determine the return value of the inner block   |
-| 4    | method call (`puts`)  | Element of the sub-array in the current iteration        | Outputs a string representation of an integer     | `nil`                                                        | Yes, used to determine the return value of the inner block   |
+| 4    | method call (`puts`)  | Element of the sub-array in the current iteration        | Outputs a string representation of an integer     | `nil`                                                        | Yes, used to determine the **return value of the conditional statement if the condition is met** |
 
-- 4 return values to pat attention to:
+- 4 return values to pay attention to:
   - return value of both calls to `each`
   - return value of both blocks
 - In this case we're using `each`, which **ignores the return value of the block**. This lets us quickly see that the value of `my_arr` will be the array that `each` was called on.
@@ -2703,18 +3856,17 @@ end
     num * 2
   end
 end
+
+# => [[2, 4], [6, 8]]
 ```
 
-| Line | <u>Action</u>                                     | <u>Object</u> (object that action is being performed on) | <u>Side Effect</u> (output or destructive action) | <u>Return Value</u> (of that action)         | <u>Is Return Value Used</u>? (by whatever instigated the action) |
-| :--- | ------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------- | -------------------------------------------- | ------------------------------------------------------------ |
-| 1    | method call (`map`)                               | Original array (outer array) (`[[1, 2], [3, 4]]`)        | None                                              | New (transformed) array (`[[2, 4], [6, 8]]`) | No                                                           |
-| 1-5  | outer block execution                             | Each sub-array                                           | None                                              | Each sub-array                               | Yes, used by **top-level** `map` transformation              |
-| 2    | method call (`map`)                               | Each sub-array                                           | None                                              | New (transformed) array (`[[2, 4], [6, 8]]`) | **Yes, used to determine the outer block's return value**    |
-| 2-4  | inner block execution                             | Element within each sub-array                            | None                                              | An integer                                   | **Yes, used by inner `map` for transformation**              |
-| 3    | method call ( * ) with integer `2` as an argument | Element within each sub-array                            | None                                              | An integer                                   | Yes, used to determine inner block's return value            |
-|      |                                                   |                                                          |                                                   |                                              |                                                              |
-|      |                                                   |                                                          |                                                   |                                              |                                                              |
-|      |                                                   |                                                          |                                                   |                                              |                                                              |
+| Line | <u>Action</u>                                       | <u>Object</u> (object that action is being performed on) | <u>Side Effect</u> (output or destructive action) | <u>Return Value</u> (of that action)          | <u>Is Return Value Used</u>? (by whatever instigated the action) |
+| :--- | --------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------- | --------------------------------------------- | ------------------------------------------------------------ |
+| 1    | method call (`map`)                                 | Original array (outer array) (`[[1, 2], [3, 4]]`)        | None                                              | New (transformed) array (`[[2, 4], [6, 8]]`)) | No                                                           |
+| 1-5  | outer block execution                               | Each sub-array                                           | None                                              | New transformed array                         | Yes, used by **top-level** `map` transformation              |
+| 2    | method call (`map`)                                 | Each sub-array                                           | None                                              | New transformed **(sub?)-array**              | **Yes, used to determine the outer block's return value**    |
+| 2-4  | inner block execution                               | Element within each sub-array                            | None                                              | An integer                                    | **Yes, used by inner `map` for transformation**              |
+| 3    | method call (` * `) with integer `2` as an argument | Element within each sub-array                            | None                                              | An integer                                    | Yes, used to determine inner block's return value            |
 
 
 
@@ -2729,20 +3881,17 @@ end
 # => [{ :c => "cat" }]
 ```
 
+| Line | <u>Action</u>         | <u>Object</u> (object that action is being performed on)     | <u>Side Effect</u> (output or destructive action) | <u>Return Value</u> (of that action)         | <u>Is Return Value Used</u>? (by whatever instigated the action) |
+| :--- | --------------------- | ------------------------------------------------------------ | ------------------------------------------------- | -------------------------------------------- | ------------------------------------------------------------ |
+| 1    | method call `select`  | Array of hashes `[{ a: 'ant', b: 'elephant' }, { c: 'cat' }]` | None                                              | `[{:c => 'cat'}]`                            | No                                                           |
+| 1-5  | outer block execution | Each hash in the array                                       | None                                              | **Boolean** - `false` and then `true`        | Yes, `select` will use the <u>truthiness of the outer block's return value</u> |
+| 2    | method call `all?`    | Each hash in the array                                       | None                                              | **Boolean** - `false` and then `true`        | Yes, used to determine the <u>outer block's return value</u> |
+| 2-4  | inner block execution | Each **key/value pair** in a hash                            | None                                              | **Boolean** - `true` `false` and then `true` | Yes, used to determine the <u>return value of `all?`</u> *(Note: hash.all? will only return true if the inner block never returns false or nil)* |
+| 3    | comparison  (`==`)    | Each **key/value pair** in a hash                            | None                                              | Boolean                                      | Yes, used to determine inner block's return value            |
+| 3    | method call (`to_s`)  | Each **key** of a key/value pair in a hash                   | None                                              | String representation of the key             | Yes, used in comparison operation                            |
+|      |                       |                                                              |                                                   |                                              |                                                              |
 
-
-| Line | <u>Action</u>         | <u>Object</u> (object that action is being performed on)     | <u>Side Effect</u> (output or destructive action) | <u>Return Value</u> (of that action)      | <u>Is Return Value Used</u>? (by whatever instigated the action) |
-| :--- | --------------------- | ------------------------------------------------------------ | ------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------ |
-| 1    | method call `select`  | Array of hashes `[{ a: 'ant', b: 'elephant' }, { c: 'cat' }]` | None                                              | `{:c => 'cat'}`                           | No                                                           |
-| 1-5  | outer block execution | Each hash in the array                                       | None                                              | `{:c => 'cat'}`  **or each sub-hash????** | **Yes, `select` will use the truthiness of the block's return value** |
-| 2    | method call `all`     | Each hash in the array                                       | None                                              | `true`                                    | Yes, used to determine the outer block's return value        |
-| 2-4  | inner block execution | **Each key/value pair in a hash (or each hash?)**            | None                                              | **`true`**                                | Yes, used to determine the return value of `all?`            |
-| 3    | comparison  (`==`)    | Each key/value pair in a hash                                | None                                              | Boolean                                   | Yes, used to determine inner block's return value            |
-| 3    | method call (`to_s`)  | Each key in the hash                                         | None                                              | String representation of the key          | Yes, used in comparison operation                            |
-|      |                       |                                                              |                                                   |                                           |                                                              |
-|      |                       |                                                              |                                                   |                                           |                                                              |
-
-- `all` - enumerable method used to check if <u>all the strings inside an array have a specific size</u>
+- `all?` - enumerable method used to check if <u>all the strings inside an array have a specific size</u>
   - returns `true` or `false`
 - `all?` will return `true` if the block passed to it never returns a value of `false` or `nil` for every key/value pair in the hash
   - We're using `value[0] == key.to_s` to test whether **ALL keys** match the first letter of all their associated values
@@ -2755,27 +3904,31 @@ end
 
 #### Example 7
 
-- Say for example we have an array of nested arrays which contain **numeric strings** and we want to sort the outer array so that the inner arrays are ordered according to the *numeric value* of the strings they contain 
+- Say for example we have an array of nested arrays which contain <u>numeric strings</u> and we want to <u>sort the outer array</u> so that the **inner arrays are ordered** according to the ***numeric value*** of the strings they contain 
 
 - ```ruby
   arr = [['1', '8', '11'], ['2', '6', '13'], ['2', '12', '15'], ['1', '8', '9']]
   ```
 
-- When sorting nested arrays it is important to understand that there are **two** sets of comparison happening:
+- We know that we want to sort at the level of the outer array, **but we can't simply call `sort` on it.** When sorting nested arrays it is important to understand that there are **two** sets of comparison happening:
 
   1.  Each of the inner arrays is compared with the other inner arrays.
-  2. The way those arrays are compared is by comparing the *elements* within them ([the documentation](http://ruby-doc.org/core/Array.html#method-i-3C-3D-3E) refers to this as comparing in an 'element-wise' manner)
+  2. The way those inner arrays are compared is by <u>comparing the *elements* within them</u> ([the documentation](http://ruby-doc.org/core/Array.html#method-i-3C-3D-3E) refers to this as comparing in an 'element-wise' manner)
 
-- Because the elements in the arrays are strings, by calling `sort` it is string order which will ultimately determine array order:
+- Because the elements in the arrays are strings, **by calling `sort` it is string order** which will ultimately **determine array order**:
 
   ```ruby
   arr.sort # => [["1", "8", "11"], ["1", "8", "9"], ["2", "12", "15"], ["2", "6", "13"]]
   ```
 
-  - Since strings are compared character by character this doesn't give us a *numerical* comparison. In order to achieve this we have to **<u>perform some transformation on the inner arrays prior to comparing them.</u>**
-  - <u>**THEY'RE BEING COMPARED CHARACTER BY CHARACTER, NOT NUMBER BY NUMBER. SO WITH "12", THE "1" AND THEN "2" GET COMPARED AS OPPOSED TO THE WHOLE 12 **</u>
+  - Since strings are compared character by character **this doesn't give us a *numerical* comparison**. In order to achieve this we have to **<u>perform some transformation on the inner arrays prior to comparing them.</u>**
+    - <u>Note: In the above code they're being compared **CHARACTER BY CHARACTER, NOT NUMBER BY NUMBER**. 
 
-- <u>**THE SOLUTION: TRANSFORM THE INNER ARRAY ELEMENTS TO INTEGERS**</u>
+    - So with "12", the "1" and next array's "6" get compared as opposed to the whole "12" at once.</u>
+
+      
+
+- **<u>THE SOLUTION</u>: <u>Transform the inner array elements to integers:</u>**
 
   ```ruby
   arr.sort_by do |sub_arr|
@@ -2786,17 +3939,17 @@ end
   # => [["1", "8", "9"], ["1", "8", "11"], ["2", "6", "13"], ["2", "12", "15"]]
   ```
 
-- **The key here is understanding that when we carry out transformation within a `sort_by` block, the <u>transformed elements are what are then used to perform the  comparison</u>. As long as what is returned by the block is comparable, we  can perform whatever transformation we need to within the block -  including nesting other method calls within it.**
+- The key here is understanding that when we carry out transformation within a `sort_by` block, the **<u>transformed elements are what are then used to perform the  comparison</u>**. **As long as what is returned by the block is comparable** *(in this case, the outer block returns the transformed sub-arrays)*, we can perform whatever transformation we need to within the block -  including nesting other method calls within it.
 
 
 
 #### Example 8
 
-- Working with different objects in nested array if you want to only select nested elements based on certain criteria
+- It can be tricky to work with different objects in nested array if you want to <u>only select nested elements based on certain criteria</u>
 
-- For example, take the 2-element array below, where we only want to  select integers greater than 13 but strings less than 6 characters.
+- For example, take the 2-element array below, where we only want to select integers greater than 13 but strings less than 6 characters.
 
-  - The trick here is that the elements are in a two layer nested array data  structure.
+  - The trick here is that the elements are in a **two layer nested array data structure**.
 
 - ```ruby
   [[8, 13, 27], ['apple', 'banana', 'cantaloupe']].map do |arr|
@@ -2810,15 +3963,19 @@ end
   end
   ```
 
-- At first you might think to reach for the select method to perform selection, but since we're working with a nested array, that won't work
+- At first you might think to reach for the `select` method to perform selection, but since we're working with a nested array, that won't work
 
-- We first need to access the nested arrays before we can select the value we want
+- We first need to **access the nested arrays before we can select the value we want**
 
-  - In order to select the specified values in the requirement, we need to  first determine if an element is an integer; there are lots of ways to  do this, we just went with the imperfect `item.to_s.to_i == item` test.
+  - In order to select the specified values in the requirement, we need to first determine if an element is an integer; there are lots of ways to do this, we just went with the imperfect `item.to_s.to_i == item` test.
 
-- One of the **main reasons `map` is used** in this example is not  only to iterate over the array and access the nested arrays, but to  **return a new array containing the selected values**. If we used `each` instead we wouldn't have the desired return value, and would need an extra variable to collect the desired results.
+- One of the **main reasons `map` is used** in this example is <u>not only to iterate over the array and access the nested arrays</u>, but to **return a new array containing the selected values**. If we used `each` instead we wouldn't have the desired return value, and would need an extra variable to collect the desired results.
+
+  
 
 #### Example 9
+
+- This example contains a **triple-level nested array**. Take your time and  try to break down each component. Hint: the <u>top-level array is a  2-element array</u>.
 
 ```ruby
 [[[1], [2], [3], [4]], [['a'], ['b'], ['c']]].map do |element1|
@@ -2833,13 +3990,18 @@ end
 ```
 
 - **<u>partition()</u>** -- The **partition()** of **enumerable** is an inbuilt method in [Ruby](https://www.geeksforgeeks.org/ruby-programming-language-introduction/) returns two arrays, one containing the <u>elements of the enumerable which return true</u>, while the other contains the elements which returns false. It returns an enumerator if no block is passed.
+
 - There are a total of 6 places where a return occurs: 3 methods (`map`, `each`, and `partition`) and 3 blocks (one for each method).
-- `each` --- we know that it <u>doesn't care about the block's return value</u> and it always returns the calling object
-- Therefore, just by looking at line 2, we can already say that the **return value of `map`** will be a **new array that matches the value of the calling object**
+
+- If we understand `each`, we know that it doesn't care about the block's return value and it always returns the calling object. Therefore, just by looking at line 2, we can already say that the **return value of `map`** will be a **new array that matches the value of the calling object**
+
+  - This is because line 2's `each` will determine the return value of the outermost block. The outermost block's return value (which will be the original calling object), in turn, determines `map`'s return value. Thus, `map`'s return value will be a new array that matches the value of the calling object.
+
+    
 
 #### Example 10
 
-- Let's say we have the following data structure of nested arrays and we  want to increment every number by 1 without changing the data structure.
+- Let's say we have the following data structure of nested arrays and we  want to increment every number by 1 <u>without changing the data structure.</u>
 
 - ```ruby
   [[[1, 2], [3, 4]], [5, 6]].map do |arr|
@@ -2853,29 +4015,69 @@ end
       end
     end
   end
+  
   ```
 
-- <u>Work on breaking down each component and understanding the return value of each expression. What will be the final return value?</u>
-
-  - | Line | <u>Action</u>                                     | <u>Object</u> (object that action is being performed on)     | <u>Side Effect</u> (output or destructive action) | <u>Return Value</u> (of that action) | <u>Is Return Value Used</u>? (by whatever instigated the action) |
-    | :--- | ------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------- | ------------------------------------ | ------------------------------------------------------------ |
-    | 1    | method call `map`                                 | Outer two element array `[[1, 2], [3, 4]], [5, 6]`           | None                                              | `[[[2, 3], [4, 5]], [6, 7]]`         | No                                                           |
-    | 1-11 | outer block execution                             | Each of the two inner arrays of the outer array ``[[1, 2], [3, 4]], [5, 6]` | None                                              |                                      |                                                              |
-    | 2    | method call `map`                                 | Each of the two inner arrays of the outer array ``[[1, 2], [3, 4]], [5, 6]` |                                                   |                                      |                                                              |
-    | 2-10 | inner block execution                             | Element of the sub-array (2 sub-arrays) in the current iteration |                                                   |                                      |                                                              |
-    | 3    | conditional `if`                                  | Element of the sub-array (2 sub-arrays) in the current iteration **IF THAT ELEMENT IS AN INTEGER** |                                                   | `nil`                                | Yes, used to determine value of inner block                  |
-    | 3    | comparison `==`                                   | Integer of the sub-array in the current iteration            |                                                   | Boolean                              | Yes, evaluated by if                                         |
-    | 3    | method call `to_s`                                | Integer of the sub-array (2 sub-arrays) in the current iteration |                                                   | String representation of element     |                                                              |
-    | 3    | method call `size`                                | Integer of the sub-array (2 sub-arrays) in the current iteration |                                                   | An integer                           |                                                              |
-    | 4    | method call ( + ) with integer `1` as an argument | Integer of the sub-array (2 sub-arrays) in the current iteration |                                                   | An integer                           |                                                              |
-    | 5    | conditional `else`                                | Element of the sub-array (2 sub-arrays) in the current iteration **IF THAT ELEMENT IS AN ARRAY** |                                                   |                                      |                                                              |
-    | 5    | method call `map`                                 | Element of the sub-SUB-array                                 |                                                   |                                      |                                                              |
-    | 5-7  | inner inner block                                 | Element of the sub-SUB-array                                 |                                                   |                                      |                                                              |
-    | 6    | method call ( + ) with integer `1` as an argument | Element of the sub-SUB-array                                 |                                                   |                                      |                                                              |
-    |      |                                                   |                                                              |                                                   |                                      |                                                              |
-    |      |                                                   |                                                              |                                                   |                                      |                                                              |
+| Line | <u>Action</u>                                       | <u>Object</u> (object that action is being performed on)     | <u>Side Effect</u> (output or destructive action) | <u>Return Value</u> (of that action)                         | <u>Is Return Value Used</u>? (by whatever instigated the action) |
+| :--- | --------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 1    | method call `map`                                   | Calling object (original object) `[[[1, 2], [3, 4]], [5, 6]]` | None                                              | New transformed array `[[[2, 3], [4, 5]], [6, 7]]`           | No                                                           |
+| 1-11 | outer block execution                               | The two inner arrays of the outer array ``[[1, 2], [3, 4]]` and `[5, 6]` | None                                              | 2 new transformed sub-arrays `[[2, 3], [, 5]]` and `[6, 7]`  | Yes, used to determine return value of `map`                 |
+| 2    | method call `map`                                   | The two inner arrays of the outer array ``[[1, 2], [3, 4]]` and  `[5, 6]` | None                                              | 2 new transformed sub-arrays `[[2, 3], [4, 5]]` and `[6, 7]` | Yes, used to determine return value of the outer block       |
+| 2-10 | inner block execution                               | Each element of the two sub-arrays                           | None                                              | **An Integer?**                                              | Yes, used to determine return value of `map` non line 2      |
+| 3    | comparison `==`                                     | Element of the sub-array                                     | None                                              | Boolean                                                      | Yes, evaluated by `if` statement                             |
+| 3-9  | conditional `if`                                    | Each element of the 2 sub-arrays                             | None                                              | **Integer** (regardless of whether the elements of the sub-arrays are <u>arrays themselves</u> or <u>integers</u> | Yes, used to determine return value of inner block           |
+| 3    | method call `to_s`                                  | Each element of the 2 sub-arrays                             | **None**                                          | String representation of element                             | Yes, used by each element of  the sub-arrays                 |
+| 3    | method call `size`                                  | Each element of the 2 sub-arrays                             | **None**                                          | An integer                                                   | Yes, used by each element of  the sub-arrays                 |
+| 4    | method call ( `+` ) with integer `1` as an argument | **Integer** **element** of the sub-array                     | None                                              | An integer                                                   | Yes, used to determine return value of `if` statement        |
+| 6    | method call `map`                                   | Sub-array that is a nested array (composed of array elements)`[[1, 2], [3, 4]]` | None                                              | New transformed array `[[2, 3], [4, 5]]`                     | Yes, used to determine the return value of the inner block   |
+| 6-8  | inner INNER block execution                         | **Integer element** of the nested sub-array                  | None                                              | **An integer**                                               | Yes, used to determine return value of `map` on line 6       |
+| 7    | method call ( + ) with integer `1` as an argument   | **Integer element** of the nested sub-array                  | None                                              | An integer                                                   | Yes, used to determine return value of `if` statement        |
+|      |                                                     |                                                              |                                                   |                                                              |                                                              |
 
   - **<u>Final Return Value</u>**: `[[[2, 3], [4, 5]], [6, 7]]`  
+
+    
+
+    ### Mutating Collections While Iterating
+
+    <u>*Do not mutate the collection that you're iterating through.*</u>  Since iteration is the basis of selection and transformation, that  implies don't mutate the collection while you're performing selection or transformation or pretty much any action on the collection.
+
+    What NOT to do:
+
+    ```ruby
+    # The method remove_evens! should delete all even numbers from the array passed in as the argument.
+    
+    def remove_evens!(arr)
+      arr.each do |num|
+        if num % 2 == 0
+          arr.delete(num)
+        end
+      end
+      arr
+    end
+    
+    p remove_evens!([1,1,2,3,4,6,8,9])
+    # expected return value [1, 1, 3, 9]
+    # actual return value [1, 1, 3, 6, 9]
+    ```
+
+  - The `Array#delete` method is destructive, and is changing the contents of `arr` during iteration.
+
+  - One way you could fix the code above is to **create a shallow copy of the array** and **iterate through it while mutating the original array.**
+
+    ```ruby
+    def remove_evens!(arr)
+      cloned_arr = arr.dup
+      cloned_arr.each do |num|
+        if num % 2 == 0
+          arr.delete(num)
+        end
+      end
+      arr
+    end
+    ```
+
+
 
 
 
@@ -2914,19 +4116,7 @@ end
 
 - **Pry is also good for debugging looping structures, because you can exit the pry session and you'll get to the NEXT loop's pry session**
 
-# RUBY METHOD LIST
-
-|         Method          |                         Description                          |      |      |
-| :---------------------: | :----------------------------------------------------------: | :--: | ---- |
-|       `each_char`       | Iterate over characters of a string; Passes [each](https://apidock.com/ruby/String/each) character in a string to a given block, |      |      |
-|        `unshift`        | Prepends objects to the front of `self,`(an array), moving other elements upwards. |      |      |
-|        `divmod`         | Returns the integer quotient and modulus (remainder) after performing division. |      |      |
-|         `times`         | Iterates the given block `int` times, passing in values from zero to int - 1. |      |      |
-| `something.map(&:to_i)` |    syntactic sugar for `something.map {|char| char.to_i}`    |      |      |
-|                         |                                                              |      |      |
-|                         |                                                              |      |      |
-|                         |                                                              |      |      |
-|                         |                                                              |      |      |
+# 
 
 
 

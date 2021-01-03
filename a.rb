@@ -1,3 +1,16 @@
+<<<<<<< HEAD
+def test
+  puts "written assessment"
+end
+
+var = test
+
+if var
+  puts "written assessment"
+else
+  puts "interview"
+end
+=======
 def test(str)
   str  += '!'
   str.downcase!
@@ -23,3 +36,4 @@ end
 # For each key/value pair passed to the block, the block and runs and returns `age`
 # The sort_by method uses the last argument evaluated in the block (`age`) to sort the the local variable people and
 # returns a new nested array (a different object) with the key-value pairs as objects in the nested array.
+>>>>>>> 04912b696f5a8c04bfa0235f1bba74d8c71f16e7
