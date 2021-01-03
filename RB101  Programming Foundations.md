@@ -501,6 +501,58 @@ Assignment : Calculator Bonus Features
     - The string object represented by the literal "Hello" is assigned to a variable that has the name `greeting` --- causes the variable `greeting` to **reference** the String object whose value is "Hello"
     - It does so by **storing the object id of the String**
 
+- Let’s assign `greeting` to a new variable:
+
+  ```ruby
+  >> whazzup = greeting 
+  => "Hello"
+  
+  >> greeting 
+  => "Hello" 
+  
+  >> whazzup 
+  => "Hello" 
+  
+  >> greeting.object_id 
+  => 70101471431160
+  
+  >> whazzup.object_id 
+  => 70101471431160 
+  ```
+  - Internally, the situation now looks like this:
+  
+  - IMAGE
+  
+    -  This demonstrates that both `greeting` and `whazzup` not only reference a String with the same value, but are, in fact, references to the same String; `greeting` and `whazzup` are aliases for each other. 
+  
+    - We can show this by using one of the two variables to change the object:
+  
+    - ```ruby
+      >> greeting.upcase!
+      => "HELLO"
+      
+      >> greeting
+      => "HELLO"
+      
+      >> whazzup
+      => "HELLO"
+      
+      >> whazzup.concat('!')
+      => "HELLO!"
+      
+      >> greeting
+      => "HELLO!"
+      
+      >> whazzup
+      => "HELLO!"
+      
+      >> greeting.object_id
+      => 70101471431160
+      
+      >> whazzup.object_id
+      => 70101471431160
+      ```
+
 ![](/home/patrick/Desktop/greeting-is-reference.png)
 
 - Reassignment doesn't change the object...it binds a new object to the variable
