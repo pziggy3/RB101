@@ -1,14 +1,14 @@
 def solution(str)
-  substr = ''
-  array = []
-  str.each_char do |char|
-    if substr.length < 2 
-      substr += char
-    else
-      array << substr
-      substr = '' << char
-    end
-    array << substr
-  end
-  array.select { |a| a.size == 2 }.uniq
+  str.chars.each_slice(2).to_a.map(&:join).map { |substr| substr.size == 1 ? substr << '_' : substr }
+end
+
+# Codewars solution
+def solution str
+  (str + '_').scan /../
+end
+# REGEX - The Dot Matches (Almost) Any Character
+
+def solution(str)
+  str << "_" if str.length.odd?
+  str.chars.each_slice(2).map(&:join)
 end
