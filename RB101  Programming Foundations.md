@@ -627,9 +627,9 @@ Assignment : Calculator Bonus Features
   4. Unlike `#upcase!`, `#upcase` **does not modify the String referenced by `value`**; instead, it creates a **new copy** of the String referenced by value, **modifies** the copy, and then **returns a reference** to the copy
 
   5. We then bind `value` to the returned reference
-     
+  
 - After the assignment, `value` references a completely new Sting - the String referenced by `#upcase`'s return value
-     
+  
 6. `#concat` is called on `value` which **modifies** `value` 
   
 7. A reference to `value` is returned from the method and stored in `t`
@@ -4116,7 +4116,7 @@ end
 
 - **Pry is also good for debugging looping structures, because you can exit the pry session and you'll get to the NEXT loop's pry session**
 
-# 
+  
 
 
 
@@ -4254,9 +4254,8 @@ end
 
 8. `String#delete!`
 
-<<<<<<< HEAD
-   - **Mutates the original string**
-=======
+   - Mutates the original string
+
 5. `<=>` 
 
    - **Spaceship operator**
@@ -4329,10 +4328,9 @@ end
      end
      ```
 
-     
+   
 
-   - 
-
+   
 8. **STRIPPING NON-ALPHABETIC CHARACTERS FROM STRING**
 
    - Using `gsub`
@@ -4444,14 +4442,6 @@ end
       ```
 
       
-
-
-
-
-
-
-
-
 
 
 

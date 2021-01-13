@@ -39,7 +39,7 @@ end
 # ????????????????????
 def reverse3(array)
   reversed_index = -1
-  result = array.inject([]) do |result, element|
+  result = array.each_with_object([]) do |element, result|
     result << array[reversed_index]
     reversed_index -=1
   end

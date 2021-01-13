@@ -1,0 +1,3 @@
+def diamonds(n)
+  
+end
